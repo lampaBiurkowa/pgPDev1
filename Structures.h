@@ -6,11 +6,9 @@ typedef struct Card
 	int Number;
 } Card;
 
-typedef struct CardsQueue
+typedef struct CardsQueueItem
 {
 	Card value;
-	struct CardsQueue* first;
-	struct CardsQueue* last;
-	struct CardsQueue* next;
-	struct CardsQueue* previous;
-} CardsQueue;
+	struct CardsQueueItem* next;
+	struct CardsQueueItem* previous;
+} CardsQueueItem;
