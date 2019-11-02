@@ -5,7 +5,7 @@
 
 void Battle(PlayerData* player1, PlayerData* player2)
 {
-
+	
 }
 
 int cardAlreadyGiven(Card *cardConsidered, Card cardsGiven[], int cardsGivenCount)
@@ -46,44 +46,44 @@ Card* generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[])
 	return arrayToFill;
 }
 
-CardsQueueItem* handleCreatingNewCardsQueueItem(Card value, CardsQueueItem *currentItem, Card cardsInRandomOrder[], PlayerData *playerData)
+CardQueueItem* handleCreatingNewCardsQueueItem(Card value, CardQueueItem *currentItem, Card cardsInRandomOrder[], CardsQueue *cardsQueue)
 {
-	CardsQueueItem item;
+	CardQueueItem item;
 	item.next = currentItem;
 	item.value = value;
-	playerData -> AllCards[playerData -> HandCardsCount] = item;
+	cardsQueue -> AllCards[cardsQueue -> CardsCount] = item;
 
 	if (currentItem == NULL)
-		currentItem = &playerData -> AllCards[playerData -> HandCardsCount];
+		currentItem = &cardsQueue -> AllCards[cardsQueue -> CardsCount];
 	else
 	{
-		currentItem -> previous = &playerData -> AllCards[playerData -> HandCardsCount];
+		currentItem -> previous = &cardsQueue -> AllCards[cardsQueue -> CardsCount];
 		currentItem = currentItem -> previous;
 	}
 
-	playerData -> HandCardsCount++;
+	cardsQueue -> CardsCount++;
 	return currentItem;
 }
 
-void assignCardsToPlayer(int cardsPerColors, Card cardsInRandomOrder[], PlayerData *playerData, int playerIndex) //player index 0 or 1
+void assignCardsToPlayer(int cardsPerColors, Card cardsInRandomOrder[], CardsQueue *cardsQueue, int playerIndex) //player index 0 or 1
 {
-	playerData -> HandCardsCount = 0;
-	CardsQueueItem* currentItem = NULL;
-	currentItem = handleCreatingNewCardsQueueItem(cardsInRandomOrder[playerIndex], currentItem, cardsInRandomOrder, playerData);
-	playerData -> FirstHandCard = currentItem;
+	cardsQueue -> CardsCount = 0;
+	CardQueueItem* currentItem = NULL;
+	currentItem = handleCreatingNewCardsQueueItem(cardsInRandomOrder[playerIndex], currentItem, cardsInRandomOrder, cardsQueue);
+	cardsQueue -> FirstCard = currentItem;
 
 	for (int i = 2; i < cardsPerColors * COLORS_COUNT; i++)
 		if (i % 2 == playerIndex)
-			currentItem = handleCreatingNewCardsQueueItem(cardsInRandomOrder[i], currentItem, cardsInRandomOrder, playerData);
+			currentItem = handleCreatingNewCardsQueueItem(cardsInRandomOrder[i], currentItem, cardsInRandomOrder, cardsQueue);
 
 	currentItem -> previous = NULL;
-	playerData -> LastHandCard = currentItem;
+	cardsQueue -> LastCard = currentItem;
 }
 
 void GiveCards(int cardsPerColors, GameState *gameState)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
 	cards = generateCardsInRandomOrder(cardsPerColors, cards);
-	assignCardsToPlayer(cardsPerColors, cards, &gameState -> Player1Data, 0);
-	assignCardsToPlayer(cardsPerColors, cards, &gameState -> Player2Data, 1);
+	assignCardsToPlayer(cardsPerColors, cards, &gameState -> Player1Data.HandCards, 0);
+	assignCardsToPlayer(cardsPerColors, cards, &gameState -> Player2Data.HandCards, 1);
 }

@@ -3,19 +3,13 @@
 #include "Structures.h"
 
 #define COLORS_COUNT (4)
-#define DECK_MAX_SIZE (52) // 4 talie * 13 kart
 #define YOUNGEST_CARD_NUMBER (2)
 
 typedef struct PlayerData
 {
-	CardsQueueItem AllCards[DECK_MAX_SIZE];
-	CardsQueueItem *FirstHandCard;
-	CardsQueueItem *LastHandCard;
-	CardsQueueItem *FirstStackCard;
-	CardsQueueItem *LastStackCard;
+	CardsQueue HandCards;
+	CardsQueue StackCards;
 	int UsedEnemyCardsInWar;
-	int HandCardsCount;
-	int StackCardsCount;
 } PlayerData;
 
 typedef struct GameState

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "Structures.c"
+#include "Structures.h"
 #include "GameEngine.h"
 
 int main()
@@ -9,8 +9,8 @@ int main()
 	GiveCards(13, &gameState);
 
 
-	CardsQueueItem* cur = gameState.Player1Data.FirstHandCard;
-	for (int i = 0; i < gameState.Player1Data.HandCardsCount; i++)
+	CardQueueItem* cur = gameState.Player1Data.HandCards.FirstCard;
+	for (int i = 0; i < gameState.Player1Data.HandCards.CardsCount; i++)
 	{
 		printf("%i %i\n", (int)cur -> value.Color, cur -> value.Number);
 		cur = cur->previous;
