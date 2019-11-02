@@ -4,7 +4,7 @@
 
 int main()
 {
-	printf("sraka");
+	printf("sraka\n");
 	GameState gameState;
 	GiveCards(13, &gameState);
 
@@ -12,7 +12,7 @@ int main()
 	CardsQueueItem* cur = gameState.Player1Data.FirstHandCard;
 	for (int i = 0; i < gameState.Player1Data.HandCardsCount; i++)
 	{
-		printf("%i %i\n", (int)cur->value.Color, cur->value.Number);
+		printf("%i %i\n", (int)cur -> value.Color, cur -> value.Number);
 		cur = cur->previous;
 	}
 

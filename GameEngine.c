@@ -46,43 +46,44 @@ Card* generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[])
 	return arrayToFill;
 }
 
-void assignCardsToPlayers(int cardsPerColors, Card cardsInRandomOrder[], GameState *gameState)
+CardsQueueItem* handleCreatingNewCardsQueueItem(Card value, CardsQueueItem *currentItem, Card cardsInRandomOrder[], PlayerData *playerData)
 {
-	gameState ->Player1Data.HandCardsCount = 0;
-	CardsQueueItem playerFirstItem;
-	playerFirstItem.next = NULL;
-	playerFirstItem.value = cardsInRandomOrder[0];
-	gameState -> Player1Data.AllCards[gameState -> Player1Data.HandCardsCount] = playerFirstItem;
-	gameState -> Player1Data.FirstHandCard = &gameState -> Player1Data.AllCards[gameState -> Player1Data.HandCardsCount];
-	CardsQueueItem *currentItem = &gameState -> Player1Data.AllCards[gameState -> Player1Data.HandCardsCount];
-	gameState -> Player1Data.HandCardsCount++;
+	CardsQueueItem item;
+	item.next = currentItem;
+	item.value = value;
+	playerData -> AllCards[playerData -> HandCardsCount] = item;
 
-	for (int i = 2; i < cardsPerColors * COLORS_COUNT; i++)
+	if (currentItem == NULL)
+		currentItem = &playerData -> AllCards[playerData -> HandCardsCount];
+	else
 	{
-		if (i % 2 == 0)
-		{
-			CardsQueueItem item;
-			item.next = currentItem;
-			item.value = cardsInRandomOrder[i];
-			gameState -> Player1Data.AllCards[gameState -> Player1Data.HandCardsCount] = item;
-			currentItem->previous = &gameState -> Player1Data.AllCards[gameState -> Player1Data.HandCardsCount];
-			currentItem = currentItem -> previous;
-			gameState -> Player1Data.HandCardsCount++;
-		}
+		currentItem -> previous = &playerData -> AllCards[playerData -> HandCardsCount];
+		currentItem = currentItem -> previous;
 	}
 
+	playerData -> HandCardsCount++;
+	return currentItem;
+}
+
+void assignCardsToPlayer(int cardsPerColors, Card cardsInRandomOrder[], PlayerData *playerData, int playerIndex) //player index 0 or 1
+{
+	playerData -> HandCardsCount = 0;
+	CardsQueueItem* currentItem = NULL;
+	currentItem = handleCreatingNewCardsQueueItem(cardsInRandomOrder[playerIndex], currentItem, cardsInRandomOrder, playerData);
+	playerData -> FirstHandCard = currentItem;
+
+	for (int i = 2; i < cardsPerColors * COLORS_COUNT; i++)
+		if (i % 2 == playerIndex)
+			currentItem = handleCreatingNewCardsQueueItem(cardsInRandomOrder[i], currentItem, cardsInRandomOrder, playerData);
+
 	currentItem -> previous = NULL;
-	gameState -> Player1Data.LastHandCard = currentItem;
+	playerData -> LastHandCard = currentItem;
 }
 
 void GiveCards(int cardsPerColors, GameState *gameState)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
 	cards = generateCardsInRandomOrder(cardsPerColors, cards);
-	for (int i = 0; i < cardsPerColors * COLORS_COUNT; i++)
-	{
-		printf("%i %i \n", cards[i].Color, cards[i].Number);
-	}
-	printf("\n");
-	assignCardsToPlayers(cardsPerColors, cards, gameState);
+	assignCardsToPlayer(cardsPerColors, cards, &gameState -> Player1Data, 0);
+	assignCardsToPlayer(cardsPerColors, cards, &gameState -> Player2Data, 1);
 }
