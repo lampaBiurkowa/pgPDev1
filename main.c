@@ -8,7 +8,6 @@ int main()
 	GameState gameState;
 	GiveCards(13, &gameState);
 
-
 	CardQueueItem* cur = gameState.Player1Data.HandCards.FirstCard;
 	for (int i = 0; i < gameState.Player1Data.HandCards.CardsCount; i++)
 	{

@@ -1,6 +1,6 @@
 #pragma once
 
-#define DECK_MAX_SIZE (52) // 4 talie * 13 kart
+#define DECK_MAX_SIZE (52) // 52 = 4 talie * 13 kart
 
 typedef struct Card
 {
@@ -24,3 +24,5 @@ typedef struct CardsQueue
 } CardsQueue;
 
 Card PopFrontCard(CardsQueue* queue);
+void PushFrontCard(CardsQueue* queue, Card value);
+void PushBackCard(CardsQueue* queue, Card value);

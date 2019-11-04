@@ -3,18 +3,58 @@
 
 #include <stdio.h> //TODO remove
 
-void Battle(PlayerData* player1, PlayerData* player2)
+void takeCardsFromStack(CardsQueue* destination, CardsQueue* source)
 {
-	
+	for (int i = 0; i < source -> CardsCount; i++)
+	{
+		Card card = PopFrontCard(source);
+		PushBackCard(destination, card);
+	}
 }
 
-int cardAlreadyGiven(Card *cardConsidered, Card cardsGiven[], int cardsGivenCount)
+void handleBattleWon(PlayerData* winner, PlayerData* looser)
 {
-	for (int i = 0; i < cardsGivenCount; i++)
-		if (cardsGiven[i].Color == cardConsidered->Color && cardsGiven[i].Number == cardConsidered->Number)
-			return 1;
+	takeCardsFromStack(&winner -> HandCards, &winner -> StackCards);
+	takeCardsFromStack(&winner -> HandCards, &looser -> StackCards);
+}
 
-	return 0;
+void addCardToStack(PlayerData* player)
+{
+	Card card = PopFrontCard(&player -> HandCards);
+	PushFrontCard(&player -> HandCards, card);
+}
+
+void handleComparingCards(PlayerData *player1, PlayerData *player2)
+{
+	int player1CardPower = player1 -> StackCards.FirstCard -> value.Number;
+	int player2CardPower = player2 -> StackCards.FirstCard -> value.Number;
+
+	if (player1CardPower > player2CardPower)
+		handleBattleWon(player1, player2);
+	else if (player1CardPower < player1CardPower)
+		handleBattleWon(player2, player1);
+	else
+		War(player1, player2);
+}
+
+void Battle(PlayerData* player1, PlayerData* player2)
+{
+	addCardToStack(player1);
+	addCardToStack(player2);
+
+	handleComparingCards(player1, player2);
+}
+
+void War(PlayerData* player1, PlayerData* player2)
+{
+	const int CARDS_TAKING_PART_IN_WAR = 2;
+	for (int i = 0; i < CARDS_TAKING_PART_IN_WAR; i++)
+	{
+		addCardToStack(player1);
+		addCardToStack(player2);
+	}
+
+	handleComparingCards(player1, player2);
 }
 
 Card generateSingleRandomCard(int cardsPerColors)
@@ -26,6 +66,15 @@ Card generateSingleRandomCard(int cardsPerColors)
 	card.Number = cardNumber;
 
 	return card;
+}
+
+int cardAlreadyGiven(Card* cardConsidered, Card cardsGiven[], int cardsGivenCount)
+{
+	for (int i = 0; i < cardsGivenCount; i++)
+		if (cardsGiven[i].Color == cardConsidered->Color && cardsGiven[i].Number == cardConsidered->Number)
+			return 1;
+
+	return 0;
 }
 
 Card* generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[])
