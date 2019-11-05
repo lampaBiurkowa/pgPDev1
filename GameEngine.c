@@ -5,7 +5,8 @@
 
 void takeCardsFromStack(CardsQueue *destination, CardsQueue *source)
 {
-	for (int i = 0; i < source -> CardsCount; i++)
+	int cardsToTakeAmount = source -> CardsCount;
+	for (int i = 0; i < cardsToTakeAmount; i++)
 	{
 		Card card = PopFrontCard(source);
 		PushBackCard(destination, card);
@@ -34,8 +35,9 @@ void handleVictory(GameState *gameState)
 
 void handleComparingCards(GameState *gameState)
 {
-	if (gameState -> Winner == NULL)
+	if (gameState -> Winner != NULL)
 		return;
+
 	int player1CardPower = gameState -> Player1Data.StackCards.FirstCard -> value.Number;
 	int player2CardPower = gameState -> Player2Data.StackCards.FirstCard -> value.Number;
 
@@ -53,6 +55,7 @@ void handleComparingCards(GameState *gameState)
 
 void Battle(GameState *gameState)
 {
+	gameState -> TurnsCount++;
 	addCardToStack(&gameState -> Player1Data);
 	addCardToStack(&gameState -> Player2Data);
 
@@ -84,6 +87,7 @@ int performWarOptionWithoutRefillIfPossible(GameState *gameState)
 	{
 		addCardToStack(&gameState -> Player1Data);
 		addCardToStack(&gameState -> Player2Data);
+		gameState -> TurnsCount++;
 	}
 
 	return 1;
@@ -178,6 +182,8 @@ void initQueues(PlayerData *playerData)
 
 void InitGame(GameState *gameState)
 {
+	gameState -> TurnsCount = 0;
+	gameState -> Winner = NULL;
 	initQueues(&gameState -> Player1Data);
 	initQueues(&gameState -> Player2Data);
 }
