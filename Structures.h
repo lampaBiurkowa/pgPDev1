@@ -6,23 +6,27 @@ typedef struct Card
 {
 	enum { PIK, KARO, TREFL, KIER } Color;
 	int Number;
+	int Id;
 } Card;
 
 typedef struct CardQueueItem
 {
 	Card value;
-	struct CardQueueItem* next;
-	struct CardQueueItem* previous;
+	struct CardQueueItem *next;
+	struct CardQueueItem *previous;
 } CardQueueItem;
 
 typedef struct CardsQueue
 {
+	int QueueItemsAllocations[DECK_MAX_SIZE];
 	CardQueueItem AllCards[DECK_MAX_SIZE];
-	CardQueueItem* FirstCard;
-	CardQueueItem* LastCard;
+	CardQueueItem *FirstCard;
+	CardQueueItem *LastCard;
 	int CardsCount;
 } CardsQueue;
 
-Card PopFrontCard(CardsQueue* queue);
-void PushFrontCard(CardsQueue* queue, Card value);
-void PushBackCard(CardsQueue* queue, Card value);
+
+void InitCardsQueue(CardsQueue *queue);
+Card PopFrontCard(CardsQueue *queue);
+void PushFrontCard(CardsQueue *queue, Card value);
+void PushBackCard(CardsQueue *queue, Card value);

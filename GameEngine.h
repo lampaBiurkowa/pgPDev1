@@ -2,6 +2,7 @@
 
 #include "Structures.h"
 
+#define CARDS_TAKING_PART_IN_WAR (2)
 #define COLORS_COUNT (4)
 #define YOUNGEST_CARD_NUMBER (2)
 
@@ -12,13 +13,18 @@ typedef struct PlayerData
 	int UsedEnemyCardsInWar;
 } PlayerData;
 
+
+typedef enum WarOption { WITH_REFILL, WITHOUT_REFILL } WarOption;
+
 typedef struct GameState
 {
 	PlayerData Player1Data;
 	PlayerData Player2Data;
-	PlayerData *ActivePlayer;
+	PlayerData *Winner;
+	WarOption WarOption;
 } GameState;
 
-void Battle(PlayerData* player1, PlayerData* player2);
-void GiveCards(int cardsPerColor, GameState* gameState);
-void War(PlayerData* player1, PlayerData* player2);
+void Battle(GameState *gameState);
+void GiveCards(int cardsPerColor, GameState *gameState);
+void InitGame(GameState *gameState);
+void War(GameState *gameState);
