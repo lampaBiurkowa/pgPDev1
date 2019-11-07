@@ -1,50 +1,32 @@
 #include <stdio.h>
-#include "Structures.h"
 #include "GameEngine.h"
+#include "GameTester.h"
+#include "Structures.h"
 
-void PlayGame(int deckSize, WarOption warOption, GameState *gameState)
-{
-	gameState -> WarOption = warOption;
-	InitGame(gameState);
-	GiveCards(deckSize, gameState);
-	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
-	{
-		Battle(gameState);
-		if (gameState -> Winner == &gameState -> Player1Data)
-			break;
-		else if (gameState -> Winner == &gameState -> Player2Data)
-			break;
-	}
-}
 
 int main()
 {
+	TestData testData;
+	testData.Repeat = 1000;
+	for (int i = 8; i <= 13; i++)
+	{
+		GameState gameState;
+		gameState.WarOption = WITHOUT_REFILL;
+		testData.GameState = gameState;
+		testData.CardsPerColor = i;
+		StatsHandler statsHandler = RunTest(&testData);
+		printf("%i %i %f\n", statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
+	}
+	printf("\n\n");
+	for (int i = 8; i <= 13; i++)
+	{
+		GameState gameState;
+		gameState.WarOption = WITH_REFILL;
+		testData.GameState = gameState;
+		testData.CardsPerColor = i;
+		StatsHandler statsHandler = RunTest(&testData);
+		printf("%i %i %f\n", statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
+	}
 
-	/*CardQueueItem *item = gameState.Player1Data.HandCards.FirstCard;
-	for (int i = 0; i < gameState.Player1Data.HandCards.CardsCount; i++)
-	{
-		printf("%i %i|", item -> value.Color, item -> value.Number);
-		item = item -> previous;
-	}
-	printf("\n bb \n");
-	item = gameState.Player2Data.HandCards.FirstCard;
-	for (int i = 0; i < gameState.Player2Data.HandCards.CardsCount; i++)
-	{
-		printf("%i %i|", item -> value.Color, item -> value.Number);
-		item = item -> previous;
-	}
-	printf("jea");*/
-
-	GameState gameState;// = malloc(sizeof(GameState));
-	for (int i = 0; i < 1000; i++)
-	{
-		PlayGame(13, WITHOUT_REFILL, &gameState);
-		if (gameState.Winner == &gameState.Player1Data)
-			printf("player 1 won ");
-		else if (gameState.Winner == &gameState.Player2Data)
-			printf("player 2 won ");
-		
-		printf("Turns Count: %i\n", gameState.TurnsCount);
-	}
 	return 0;
 }

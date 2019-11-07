@@ -91,13 +91,72 @@ int performWarOptionWithoutRefillIfPossible(GameState *gameState)
 	}
 
 	return 1;
+} 
+
+void addCardToStackWithHelp(PlayerData *helpingPlayer, PlayerData *playerNeedingHelp)
+{
+	Card card = PopFrontCard(&helpingPlayer -> HandCards);
+	PushFrontCard(&playerNeedingHelp -> StackCards, card);
+}
+
+void buildStackWithHelp(PlayerData *helpingPlayer, PlayerData *playerNeedingHelp)
+{
+	for (int i = 0; i <= CARDS_TAKING_PART_IN_WAR - playerNeedingHelp -> HandCards.CardsCount; i++)
+		addCardToStackWithHelp(helpingPlayer, playerNeedingHelp);
+
+	for (int i = 0; i <= CARDS_TAKING_PART_IN_WAR - playerNeedingHelp -> HandCards.CardsCount; i++)
+		addCardToStack(helpingPlayer);
+
+	playerNeedingHelp -> UsedEnemyCardsInWar = 1;
+}
+
+int performWarOptionWithRefillIfPossible(GameState *gameState)
+{
+	if (gameState -> Player1Data.HandCards.CardsCount <= 2) //TODO & > 0?
+	{
+		if (gameState -> Player1Data.UsedEnemyCardsInWar == 0)
+		{
+			buildStackWithHelp(&gameState -> Player2Data, &gameState -> Player1Data);
+			gameState -> TurnsCount++;
+		}
+		else
+			return 0;
+	}
+	else if (gameState -> Player2Data.HandCards.CardsCount <= 2)
+	{
+		if (gameState -> Player2Data.UsedEnemyCardsInWar == 0)
+		{
+			buildStackWithHelp(&gameState -> Player1Data, &gameState -> Player2Data);
+			gameState -> TurnsCount++;
+		}
+		else
+			return 0;
+	}
+	else
+	{
+		for (int i = 0; i < CARDS_TAKING_PART_IN_WAR; i++)
+		{
+			addCardToStack(&gameState -> Player1Data);
+			addCardToStack(&gameState -> Player2Data);
+			gameState -> TurnsCount++;
+		}
+	}
+
+	return 1;
 }
 
 void War(GameState *gameState)
 {
 	if (gameState -> WarOption == WITHOUT_REFILL)
+	{
 		if (performWarOptionWithoutRefillIfPossible(gameState))
 			handleComparingCards(&gameState -> Player1Data, &gameState -> Player2Data);
+	}
+	else if (gameState -> WarOption == WITH_REFILL)
+	{
+		if (performWarOptionWithRefillIfPossible(gameState))
+			handleComparingCards(&gameState -> Player1Data, &gameState -> Player2Data);
+	}
 }
 
 Card generateSingleRandomCard(int cardsPerColors)
@@ -107,7 +166,6 @@ Card generateSingleRandomCard(int cardsPerColors)
 	Card card;
 	card.Color = colorId;
 	card.Number = cardNumber;
-
 	return card;
 }
 
@@ -120,9 +178,9 @@ int cardAlreadyGiven(Card *cardConsidered, Card cardsGiven[], int cardsGivenCoun
 	return 0;
 }
 
-Card *generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[])
+Card *generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[], unsigned int seed)
 {
-	srand(time(NULL));
+	srand(time(NULL) + seed * 7);
 
 	int cardsGivenCount = 0;
 	while (cardsGivenCount < cardsPerColors * COLORS_COUNT)
@@ -169,7 +227,7 @@ void assignCardsToPlayer(int cardsPerColors, Card cardsInRandomOrder[], CardsQue
 void GiveCards(int cardsPerColors, GameState *gameState)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
-	cards = generateCardsInRandomOrder(cardsPerColors, cards);
+	cards = generateCardsInRandomOrder(cardsPerColors, cards, gameState -> RandomSeed);
 	assignCardsToPlayer(cardsPerColors, cards, &gameState -> Player1Data.HandCards, 0);
 	assignCardsToPlayer(cardsPerColors, cards, &gameState -> Player2Data.HandCards, 1);
 }
@@ -184,6 +242,8 @@ void InitGame(GameState *gameState)
 {
 	gameState -> TurnsCount = 0;
 	gameState -> Winner = NULL;
+	gameState -> Player1Data.UsedEnemyCardsInWar = 0;
+	gameState -> Player2Data.UsedEnemyCardsInWar = 0;
 	initQueues(&gameState -> Player1Data);
 	initQueues(&gameState -> Player2Data);
 }

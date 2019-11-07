@@ -20,6 +20,7 @@ typedef struct GameState
 {
 	PlayerData Player1Data;
 	PlayerData Player2Data;
+	int RandomSeed;
 	int TurnsCount;
 	PlayerData *Winner;
 	WarOption WarOption;
