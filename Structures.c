@@ -1,5 +1,4 @@
 #include "Structures.h"
-#define NULL (0)
 
 void InitCardsQueue(CardsQueue *queue)
 {

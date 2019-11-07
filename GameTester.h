@@ -13,7 +13,6 @@ typedef struct StatsHandler
 typedef struct TestData
 {
 	int Repeat;
-	int CardsPerColor;
 	GameState GameState;
 } TestData;
 

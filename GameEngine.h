@@ -18,6 +18,7 @@ typedef enum WarOption { WITH_REFILL, WITHOUT_REFILL } WarOption;
 
 typedef struct GameState
 {
+	int CardsPerColor;
 	PlayerData Player1Data;
 	PlayerData Player2Data;
 	int RandomSeed;
@@ -27,6 +28,6 @@ typedef struct GameState
 } GameState;
 
 void Battle(GameState *gameState);
-void GiveCards(int cardsPerColor, GameState *gameState);
+void GiveCards(GameState *gameState);
 void InitGame(GameState *gameState);
 void War(GameState *gameState);
