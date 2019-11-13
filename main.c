@@ -3,11 +3,19 @@
 #include "GameTester.h"
 #include "InputReader.h"
 #include "Structures.h"
-
+#include "Rank.h"
+#include "CardsDeliverer.h"
 
 int main()
 {
-	ReadGameState("teest.txt");
+	GameState test;
+	test.CardsPerColor = 13;
+	test.RandomSeed = 123;
+	test.WarOption = WITHOUT_REFILL;
+	InitGame(&test);
+	GetCardsForRank(30, &test);
+	printf("dfsdfa");
+	//ReadGameState("teest.txt");
 	TestData testData;
 	testData.Repeat = 1000;
 	for (int i = 8; i <= 13; i++)

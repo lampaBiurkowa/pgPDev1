@@ -72,8 +72,6 @@ void GiveCards(GameState *gameState)
 	assignCardsToPlayer(gameState -> CardsPerColor, cards, &gameState -> Player2Data.HandCards, 1);
 }
 
-
-
 int getCardNumberOccurrences(int numberConsidered, Card cardsDisabled[], int cardsDisabledCount)
 {
 	int occurences = COLORS_COUNT;
@@ -88,14 +86,35 @@ int getCardNumberOccurrences(int numberConsidered, Card cardsDisabled[], int car
 int getMaxRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount)
 {
 	int maxRankReachable = 0;
-	int currentNumber = MAX_CARD_NUMBER_POINTING;
-	for (int i = 0; i < cardsAmount && currentNumber >= MIN_CARD_NUMBER_POINTING; i += 4)
+	int cardsUsedCount = 0;
+	int currentNumber = MAX_CARD_NUMBER;
+	while (currentNumber >= MIN_CARD_NUMBER_POINTING && cardsUsedCount < cardsAmount)
 	{
 		int currentPoint = currentNumber - MIN_CARD_NUMBER_POINTING + 1;
-		maxRankReachable += getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount) * currentPoint;
+		int occurences = getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount);
+		maxRankReachable += occurences * currentPoint;
+		cardsUsedCount += occurences;
 		currentNumber--;
 	}
+
 	return maxRankReachable;
+}
+
+int getMinRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount)
+{
+	int minRankReachable = 0;
+	int cardsUsedCount = 0;
+	int currentNumber = MIN_CARD_NUMBER;
+	while (currentNumber <= MAX_CARD_NUMBER && cardsUsedCount < cardsAmount)
+	{
+		int currentPoint = currentNumber < MIN_CARD_NUMBER_POINTING ? 0 : currentNumber - MIN_CARD_NUMBER_POINTING + 1;
+		int occurences = getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount);
+		minRankReachable += occurences * currentPoint;
+		cardsUsedCount += occurences;
+		currentNumber++;
+	}
+
+	return minRankReachable;
 }
 
 void generateCardsForRank(int cardsPerColors, int rank, Card arrayToFill[], unsigned int seed)
@@ -103,16 +122,33 @@ void generateCardsForRank(int cardsPerColors, int rank, Card arrayToFill[], unsi
 	srand(time(NULL) + seed * 7);
 
 	int cardsGivenCount = 0;
-	while (cardsGivenCount < cardsPerColors * COLORS_COUNT)
+	int currentRank = 0;
+	while (cardsGivenCount < (cardsPerColors * COLORS_COUNT) / 2)
 	{
 		Card card = generateSingleRandomCard(cardsPerColors);
 		if (!cardAlreadyGiven(&card, arrayToFill, cardsGivenCount))
 		{
 			arrayToFill[cardsGivenCount] = card;
 			cardsGivenCount++;
+			if (card.Number >= MIN_CARD_NUMBER_POINTING)
+				currentRank += card.Number - MIN_CARD_NUMBER_POINTING + 1;
 
-			if (getMaxRankReachable((cardsPerColors * COLORS_COUNT) / 2, arrayToFill, cardsGivenCount) < rank)
+			printf("u jea %i goal:%i current:%i max:%i min:%i\n", cardsGivenCount, rank, currentRank, getMaxRankReachable((cardsPerColors * COLORS_COUNT) / 2 - cardsGivenCount, arrayToFill, cardsGivenCount), getMinRankReachable((cardsPerColors * COLORS_COUNT) / 2 - cardsGivenCount, arrayToFill, cardsGivenCount));
+			if (getMaxRankReachable((cardsPerColors * COLORS_COUNT) / 2 - cardsGivenCount, arrayToFill, cardsGivenCount) < rank - currentRank)
+			{
 				cardsGivenCount--;
+				currentRank -= card.Number - MIN_CARD_NUMBER_POINTING + 1;
+			}
+			else if (getMinRankReachable((cardsPerColors * COLORS_COUNT) / 2 - cardsGivenCount, arrayToFill, cardsGivenCount) > rank - currentRank)
+			{
+				cardsGivenCount--;
+				currentRank -= card.Number - MIN_CARD_NUMBER_POINTING + 1;
+			}
+			else if (currentRank > rank)
+			{
+				cardsGivenCount--;
+				currentRank -= card.Number - MIN_CARD_NUMBER_POINTING + 1;
+			}
 		}
 	}
 }
