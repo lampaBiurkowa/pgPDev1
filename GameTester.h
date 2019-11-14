@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameEngine.h"
+#include "StandardGameEngine.h"
 
 typedef struct StatsHandler
 {
@@ -10,9 +10,12 @@ typedef struct StatsHandler
 	int Player2VictoriesCount;
 } StatsHandler;
 
+typedef enum GameRules { STANDARD, SMART } GameRules;
+
 typedef struct TestData
 {
 	int Repeat;
+	GameRules GameRules;
 	GameState GameState;
 } TestData;
 

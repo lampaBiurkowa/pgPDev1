@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "GameEngine.h"
+#include "StandardGameEngine.h"
 #include "GameTester.h"
 #include "InputReader.h"
 #include "Structures.h"
@@ -10,9 +10,7 @@ int main()
 {
 	GameState test;
 	test.CardsPerColor = 13;
-	test.RandomSeed = 123;
-	test.WarOption = WITHOUT_REFILL;
-	InitGame(&test);
+	InitGame(&test, WITHOUT_REFILL, 123);
 	GetCardsForRank(0, &test);
 	
 	CardQueueItem *item = test.Player1Data.HandCards.FirstCard;
