@@ -14,7 +14,15 @@ int main()
 	test.WarOption = WITHOUT_REFILL;
 	InitGame(&test);
 	GetCardsForRank(30, &test);
-	printf("dfsdfa");
+	
+	CardQueueItem *item = test.Player1Data.HandCards.FirstCard;
+	for (int i = 0; i < test.Player1Data.HandCards.CardsCount; i++)
+	{
+		printf("| %i %i ", item -> value.Color, item->value.Number);
+		item = item->previous;
+	}
+
+	printf("\ndfsdfa %i ", test.Player1Data.HandCards.CardsCount);
 	//ReadGameState("teest.txt");
 	TestData testData;
 	testData.Repeat = 1000;

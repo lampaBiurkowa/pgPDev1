@@ -1,6 +1,14 @@
 #include "Rank.h"
 #include "Structures.h"
 
+int GetCardRank(int cardNumber)
+{
+	if (cardNumber < MIN_CARD_NUMBER_POINTING)
+		return 0;
+
+	return cardNumber - MIN_CARD_NUMBER_POINTING + 1;
+}
+
 int GetPlayerRank(PlayerData *player)
 {
 	int output = 0;
