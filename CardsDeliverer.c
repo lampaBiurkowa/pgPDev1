@@ -73,58 +73,13 @@ void GiveCards(GameState *gameState)
 	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
 }
 
-int getCardNumberOccurrences(int numberConsidered, Card cardsDisabled[], int cardsDisabledCount)
-{
-	int occurences = COLORS_COUNT;
-
-	for (int i = 0; i < cardsDisabledCount; i++)
-		if (cardsDisabled[i].Number == numberConsidered)
-			occurences--;
-
-	return occurences;
-}
-
-int getMaxRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount)
-{
-	int maxRankReachable = 0;
-	int cardsUsedCount = 0;
-	int currentNumber = MAX_CARD_NUMBER;
-	while (currentNumber >= MIN_CARD_NUMBER_POINTING && cardsUsedCount < cardsAmount)
-	{
-		int currentPoint = currentNumber - MIN_CARD_NUMBER_POINTING + 1;
-		int occurences = getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount);
-		maxRankReachable += occurences * currentPoint;
-		cardsUsedCount += occurences;
-		currentNumber--;
-	}
-
-	return maxRankReachable;
-}
-
-int getMinRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount)
-{
-	int minRankReachable = 0;
-	int cardsUsedCount = 0;
-	int currentNumber = MIN_CARD_NUMBER;
-	while (currentNumber <= MAX_CARD_NUMBER && cardsUsedCount < cardsAmount)
-	{
-		int currentPoint = GetCardRank(currentNumber);
-		int occurences = getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount);
-		minRankReachable += occurences * currentPoint;
-		cardsUsedCount += occurences;
-		currentNumber++;
-	}
-
-	return minRankReachable;
-}
-
 int wasDecisionValid(int cardsToGiveCount, Card cardsUsed[], int cardsGivenCount, int rank, int currentRank)
 {
 	int missingRank = rank - currentRank;
 	int decisionValid = TRUE;
-	if (getMaxRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount) < missingRank)
+	if (GetMaxRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount) < missingRank)
 		decisionValid = FALSE;
-	else if (getMinRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount) > missingRank)
+	else if (GetMinRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount) > missingRank)
 		decisionValid = FALSE;
 	else if (currentRank > rank)
 		decisionValid = FALSE;
@@ -147,7 +102,7 @@ void generateCardsForRank(int cardsPerColors, int rank, Card arrayToFill[], unsi
 		cardsGivenCount++;
 		currentRank += GetCardRank(card.Number);
 
-		int missingCardsCount = cardsToGiveCount - cardsGivenCount;
+		int missingCardsCount = cardsToGiveCount - cardsGivenCount + 1;
 		if (!wasDecisionValid(missingCardsCount, arrayToFill, cardsGivenCount, rank, currentRank))
 		{
 			cardsGivenCount--;
@@ -165,25 +120,25 @@ int indexAlreadyPlaced(int index, int indexesAlreadyPlaced[], int indexesPlacedC
 	return FALSE;
 }
 
-void ShuffleCards(CardsQueue *queue)
+void generateNewIndexesPlacement(int arrayToFill[], int cardsCount)
 {
 	srand(time(NULL));
 
-	int newIndexesPlacement[DECK_MAX_SIZE / 2]; //TODO new int[] ?
-	
 	int indexesPlacedCount = 0;
-	int cardsCount = queue -> CardsCount;
 	while (indexesPlacedCount < cardsCount)
 	{
 		int index = rand() % cardsCount;
-		if (indexAlreadyPlaced(index, newIndexesPlacement, indexesPlacedCount))
+		if (indexAlreadyPlaced(index, arrayToFill, indexesPlacedCount))
 			continue;
-		
-		newIndexesPlacement[indexesPlacedCount] = index;
+
+		arrayToFill[indexesPlacedCount] = index;
 		indexesPlacedCount++;
 	}
+}
 
-	Card cards[DECK_MAX_SIZE / 2]; //TODO new int[] ?
+void assignShuffledCards(int cardsCount, CardsQueue *queue, int newIndexesPlacement[])
+{
+	Card *cards = malloc(sizeof(Card) * cardsCount);
 	for (int i = 0; i < cardsCount; i++)
 		cards[i] = PopFrontCard(queue);
 
@@ -191,11 +146,26 @@ void ShuffleCards(CardsQueue *queue)
 		PushBackCard(queue, cards[newIndexesPlacement[i]]);
 }
 
+void shuffleCards(CardsQueue *queue)
+{
+	int cardsCount = queue -> CardsCount;
+	int *newIndexesPlacement = malloc(sizeof(int) * cardsCount);
+	generateNewIndexesPlacement(newIndexesPlacement, cardsCount);
+	assignShuffledCards(cardsCount, queue, newIndexesPlacement);
+}
+
 void GetCardsForRank(int rank, GameState *gameState)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
+
+
+	if (rank < GetMinRankForDeckSize(gameState -> CardsPerColor))
+		rank = GetMinRankForDeckSize(gameState -> CardsPerColor);
+	else if (rank > GetMaxRankForDeckSize(gameState -> CardsPerColor))
+		rank = GetMaxRankForDeckSize(gameState -> CardsPerColor);
+
 	generateCardsForRank(gameState -> CardsPerColor, rank, cards, gameState -> RandomSeed);
 	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
-	ShuffleCards(&gameState -> Player1Data.HandCards);
-	ShuffleCards(&gameState -> Player2Data.HandCards);
+	shuffleCards(&gameState -> Player1Data.HandCards);
+	shuffleCards(&gameState -> Player2Data.HandCards);
 }

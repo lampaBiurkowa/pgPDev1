@@ -13,7 +13,7 @@ int main()
 	test.RandomSeed = 123;
 	test.WarOption = WITHOUT_REFILL;
 	InitGame(&test);
-	GetCardsForRank(30, &test);
+	GetCardsForRank(0, &test);
 	
 	CardQueueItem *item = test.Player1Data.HandCards.FirstCard;
 	for (int i = 0; i < test.Player1Data.HandCards.CardsCount; i++)
