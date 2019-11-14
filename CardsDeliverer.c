@@ -22,7 +22,7 @@ int cardAlreadyGiven(Card *cardConsidered, Card cardsGiven[], int cardsGivenCoun
 
 void generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[], unsigned int seed)
 {
-	srand(time(NULL) + seed * 7);
+	srand(time(NULL) + seed);
 
 	int cardsGivenCount = 0;
 	while (cardsGivenCount < cardsPerColors * COLORS_COUNT)
@@ -70,7 +70,7 @@ void GiveCards(GameState *gameState)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
 	generateCardsInRandomOrder(gameState -> CardsPerColor, cards, gameState -> RandomSeed);
-	assignCardsToPlayers(gameState -> CardsPerColor, cards, &gameState);
+	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
 }
 
 int getCardNumberOccurrences(int numberConsidered, Card cardsDisabled[], int cardsDisabledCount)
@@ -169,17 +169,33 @@ void ShuffleCards(CardsQueue *queue)
 {
 	srand(time(NULL));
 
-	int newIndexesPlacement[DECK_MAX_SIZE / 2];
+	int newIndexesPlacement[DECK_MAX_SIZE / 2]; //TODO new int[] ?
 	
-	//while (1)
+	int indexesPlacedCount = 0;
+	int cardsCount = queue -> CardsCount;
+	while (indexesPlacedCount < cardsCount)
 	{
-		rand() % queue -> CardsCount;
+		int index = rand() % cardsCount;
+		if (indexAlreadyPlaced(index, newIndexesPlacement, indexesPlacedCount))
+			continue;
+		
+		newIndexesPlacement[indexesPlacedCount] = index;
+		indexesPlacedCount++;
 	}
+
+	Card cards[DECK_MAX_SIZE / 2]; //TODO new int[] ?
+	for (int i = 0; i < cardsCount; i++)
+		cards[i] = PopFrontCard(queue);
+
+	for (int i = 0; i < cardsCount; i++)
+		PushBackCard(queue, cards[newIndexesPlacement[i]]);
 }
 
 void GetCardsForRank(int rank, GameState *gameState)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
 	generateCardsForRank(gameState -> CardsPerColor, rank, cards, gameState -> RandomSeed);
-	assignCardsToPlayers(gameState -> CardsPerColor, cards, &gameState);
+	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
+	ShuffleCards(&gameState -> Player1Data.HandCards);
+	ShuffleCards(&gameState -> Player2Data.HandCards);
 }
