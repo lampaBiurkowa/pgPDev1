@@ -1,0 +1,126 @@
+#include "StandardGameEngine.h"
+#include <time.h>
+
+#include <stdio.h> //TODO remove
+
+void Battle(GameState *gameState)
+{
+	gameState -> TurnsCount++;
+	AddFirstCardToStack(&gameState -> Player1Data);
+	AddFirstCardToStack(&gameState -> Player2Data);
+
+	HandleComparingCards(gameState);
+}
+
+/**********/
+
+Card smartSelectRandomly(Card *cards) //TODO seed
+{
+	srand(time(NULL));
+	return cards[rand() % 2];
+}
+
+Card smartSelectDefensively(Card *cards)
+{
+	return cards[0].Number < cards[1].Number ? cards[0] : cards[1];
+}
+
+Card smartSelectOffensively(Card *cards)
+{
+	return cards[0].Number > cards[1].Number ? cards[0] : cards[1];
+}
+
+void SmartBattle(GameState *gameState)
+{
+	gameState -> TurnsCount++;
+
+	Card *cards = malloc(sizeof(Card) * 2);
+	cards[0] = PopFrontCard(&gameState -> Player1Data.HandCards);
+	cards[1] = PopFrontCard(&gameState -> Player1Data.HandCards);
+
+	AddFirstCardToStack(&gameState -> Player1Data);
+	AddFirstCardToStack(&gameState -> Player2Data);
+
+	HandleComparingCards(gameState);
+}
+
+int performWarOptionWithoutRefillIfPossible(GameState *gameState)
+{
+	if (!finishGameIfWarNotPossible(gameState))
+		return FALSE;
+
+	for (int i = 0; i < CARDS_TAKING_PART_IN_WAR; i++)
+	{
+		AddFirstCardToStack(&gameState -> Player1Data);
+		AddFirstCardToStack(&gameState -> Player2Data);
+		gameState -> TurnsCount++;
+	}
+
+	return TRUE;
+} 
+
+void addCardToStackWithHelp(PlayerData *helpingPlayer, PlayerData *playerNeedingHelp)
+{
+	Card card = PopFrontCard(&helpingPlayer -> HandCards);
+	PushFrontCard(&playerNeedingHelp -> StackCards, card);
+}
+
+void buildStackWithHelp(PlayerData *helpingPlayer, PlayerData *playerNeedingHelp)
+{
+	for (int i = 0; i <= CARDS_TAKING_PART_IN_WAR - playerNeedingHelp -> HandCards.CardsCount; i++)
+		addCardToStackWithHelp(helpingPlayer, playerNeedingHelp);
+
+	for (int i = 0; i <= CARDS_TAKING_PART_IN_WAR - playerNeedingHelp -> HandCards.CardsCount; i++)
+		AddFirstCardToStack(helpingPlayer);
+
+	playerNeedingHelp -> UsedEnemyCardsInWar = 1;
+}
+
+int performWarOptionWithRefillIfPossible(GameState *gameState)
+{
+	if (gameState -> Player1Data.HandCards.CardsCount <= 2) //TODO & > 0?
+	{
+		if (gameState -> Player1Data.UsedEnemyCardsInWar == 0)
+		{
+			buildStackWithHelp(&gameState -> Player2Data, &gameState -> Player1Data);
+			gameState -> TurnsCount++;
+		}
+		else
+			return FALSE;
+	}
+	else if (gameState -> Player2Data.HandCards.CardsCount <= 2)
+	{
+		if (gameState -> Player2Data.UsedEnemyCardsInWar == 0)
+		{
+			buildStackWithHelp(&gameState -> Player1Data, &gameState -> Player2Data);
+			gameState -> TurnsCount++;
+		}
+		else
+			return FALSE;
+	}
+	else
+	{
+		for (int i = 0; i < CARDS_TAKING_PART_IN_WAR; i++)
+		{
+			AddFirstCardToStack(&gameState -> Player1Data);
+			AddFirstCardToStack(&gameState -> Player2Data);
+			gameState -> TurnsCount++;
+		}
+	}
+
+	return TRUE;
+}
+
+void War(GameState *gameState)
+{
+	if (gameState -> WarOption == WITHOUT_REFILL)
+	{
+		if (performWarOptionWithoutRefillIfPossible(gameState))
+			HandleComparingCards(&gameState -> Player1Data, &gameState -> Player2Data);
+	}
+	else if (gameState -> WarOption == WITH_REFILL)
+	{
+		if (performWarOptionWithRefillIfPossible(gameState))
+			HandleComparingCards(&gameState -> Player1Data, &gameState -> Player2Data);
+	}
+}
