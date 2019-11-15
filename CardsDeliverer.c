@@ -22,7 +22,7 @@ int cardAlreadyGiven(Card *cardConsidered, Card cardsGiven[], int cardsGivenCoun
 
 void generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[], unsigned int seed)
 {
-	srand(time(NULL) + seed);
+	srand(time(NULL) + seed * 7); //?
 
 	int cardsGivenCount = 0;
 	while (cardsGivenCount < cardsPerColors * COLORS_COUNT)

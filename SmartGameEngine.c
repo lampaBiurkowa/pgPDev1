@@ -38,7 +38,8 @@ void chooseCardWithStrategy(PlayerData *startingPlayer, PlayerData *selectingPla
 void appendStackInSmartBattle(PlayerData *startingPlayer, PlayerData *selectingPlayer)
 {
 	AddFirstCardToStack(startingPlayer);
-	chooseCardWithStrategy(startingPlayer, selectingPlayer);
+	if (selectingPlayer -> HandCards.CardsCount >= 2)
+		chooseCardWithStrategy(startingPlayer, selectingPlayer);
 	AddFirstCardToStack(selectingPlayer);
 }
 

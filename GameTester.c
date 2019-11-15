@@ -1,4 +1,5 @@
 #include "GameTester.h"
+#include "CardsDeliverer.h"
 
 void InitStatsHandler(StatsHandler *handler)
 {
@@ -26,9 +27,17 @@ void playSmartGame(int deckSize, WarOption warOption, GameState *gameState, int 
 {
 	InitGame(gameState, warOption, seed);
 	GiveCards(gameState);
+	int startingPlayerIndex = 0;
+	PlayerData *startingPlayer;
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
-		Battle(gameState);
+		if (startingPlayerIndex == 0)
+			startingPlayer = &gameState -> Player1Data;
+		else
+			startingPlayer = &gameState -> Player2Data;
+		startingPlayer = (startingPlayerIndex + 1) % 2;
+
+		SmartBattle(gameState, startingPlayer);
 		if (gameState -> Winner == &gameState -> Player1Data)
 			break;
 		else if (gameState -> Winner == &gameState -> Player2Data)
@@ -42,7 +51,7 @@ StatsHandler RunTest(TestData *testData)
 	InitStatsHandler(&statsHandler);
 	for (int i = 0; i < 1000; i++)
 	{
-		if (testData -> GameRules == STANDARD)
+		if (testData -> GameState.GameRules == STANDARD)
 			playStandardGame(testData -> GameState.CardsPerColor, testData -> GameState.WarOption, &testData -> GameState, i);
 		else
 			playSmartGame(testData -> GameState.CardsPerColor, testData -> GameState.WarOption, &testData -> GameState, i);

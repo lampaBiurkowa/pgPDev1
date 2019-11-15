@@ -84,11 +84,11 @@ void War(GameState *gameState)
 	if (gameState -> WarOption == WITHOUT_REFILL)
 	{
 		if (performWarOptionWithoutRefillIfPossible(gameState))
-			HandleComparingCards(&gameState -> Player1Data, &gameState -> Player2Data);
+			HandleComparingCards(gameState);
 	}
 	else if (gameState -> WarOption == WITH_REFILL)
 	{
 		if (performWarOptionWithRefillIfPossible(gameState))
-			HandleComparingCards(&gameState -> Player1Data, &gameState -> Player2Data);
+			HandleComparingCards(gameState);
 	}
 }

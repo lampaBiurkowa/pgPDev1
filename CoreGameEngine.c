@@ -20,10 +20,6 @@ void handleBattleWon(PlayerData *winner, PlayerData *looser, GameRules gameRules
 		CardsQueue shuffledStackCards;
 		InitCardsQueue(&shuffledStackCards);
 		getShuffledStackCards(&shuffledStackCards, winner, looser);
-		if (shuffledStackCards.FirstCard->value.Number > 14 || shuffledStackCards.FirstCard->value.Number<2)
-		{
-			printf("SRANE\n");
-		}
 		MoveQueueToQueue(&winner -> HandCards, &shuffledStackCards);
 	}
 }
