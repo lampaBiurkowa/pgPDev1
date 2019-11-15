@@ -146,7 +146,7 @@ void assignShuffledCards(int cardsCount, CardsQueue *queue, int newIndexesPlacem
 		PushBackCard(queue, cards[newIndexesPlacement[i]]);
 }
 
-void shuffleCards(CardsQueue *queue)
+void ShuffleCards(CardsQueue *queue)
 {
 	int cardsCount = queue -> CardsCount;
 	int *newIndexesPlacement = malloc(sizeof(int) * cardsCount);
@@ -166,6 +166,6 @@ void GetCardsForRank(int rank, GameState *gameState)
 
 	generateCardsForRank(gameState -> CardsPerColor, rank, cards, gameState -> RandomSeed);
 	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
-	shuffleCards(&gameState -> Player1Data.HandCards);
-	shuffleCards(&gameState -> Player2Data.HandCards);
+	ShuffleCards(&gameState -> Player1Data.HandCards);
+	ShuffleCards(&gameState -> Player2Data.HandCards);
 }

@@ -83,3 +83,18 @@ void ClearCards(CardsQueue *queue)
 
 	InitCardsQueue(queue);
 }
+
+void SwapFrontTwoCards(CardsQueue *queue)
+{
+	Card firstCard = PopFrontCard(queue);
+	Card secondCard = PopFrontCard(queue);
+	PushBackCard(queue, firstCard);
+	PushBackCard(queue, secondCard);
+}
+
+void MoveQueueToQueue(CardsQueue *destination, CardsQueue *source)
+{
+	int cardsToTakeAmount = source -> CardsCount;
+	for (int i = 0; i < cardsToTakeAmount; i++)
+		PushBackCard(destination, PopFrontCard(source));
+}

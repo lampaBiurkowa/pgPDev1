@@ -30,6 +30,8 @@ typedef struct CardsQueue
 
 
 void InitCardsQueue(CardsQueue *queue);
+void MoveQueueToQueue(CardsQueue *destination, CardsQueue *source);
 Card PopFrontCard(CardsQueue *queue);
 void PushFrontCard(CardsQueue *queue, Card value);
 void PushBackCard(CardsQueue *queue, Card value);
+void SwapFrontTwoCards(CardsQueue *queue);

@@ -10,13 +10,13 @@ typedef struct StatsHandler
 	int Player2VictoriesCount;
 } StatsHandler;
 
-typedef enum GameRules { STANDARD, SMART } GameRules;
-
 typedef struct TestData
 {
 	int Repeat;
 	GameRules GameRules;
 	GameState GameState;
+	Strategy Player1Strategy;
+	Strategy Player2Strategy;
 } TestData;
 
 void InitStatsHandler(StatsHandler *statsHandler);

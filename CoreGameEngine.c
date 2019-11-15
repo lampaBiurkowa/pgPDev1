@@ -1,19 +1,31 @@
 #include "CoreGameEngine.h"
+#include "CardsDeliverer.h"
 
-void takeCardsFromStack(CardsQueue *destination, CardsQueue *source)
-{
-	int cardsToTakeAmount = source -> CardsCount;
-	for (int i = 0; i < cardsToTakeAmount; i++)
-	{
-		Card card = PopFrontCard(source);
-		PushBackCard(destination, card);
-	}
+void getShuffledStackCards(CardsQueue *allStackCards, PlayerData *player1, PlayerData *player2)
+{	
+	MoveQueueToQueue(allStackCards, &player1 -> StackCards);
+	MoveQueueToQueue(allStackCards, &player2 -> StackCards);
+	ShuffleCards(allStackCards);
 }
 
-void handleBattleWon(PlayerData *winner, PlayerData *looser)
+void handleBattleWon(PlayerData *winner, PlayerData *looser, GameRules gameRules)
 {
-	takeCardsFromStack(&winner -> HandCards, &winner -> StackCards);
-	takeCardsFromStack(&winner -> HandCards, &looser -> StackCards);
+	if (gameRules == STANDARD)
+	{
+		MoveQueueToQueue(&winner -> HandCards, &winner -> StackCards);
+		MoveQueueToQueue(&winner -> HandCards, &looser -> StackCards);
+	}
+	else
+	{
+		CardsQueue shuffledStackCards;
+		InitCardsQueue(&shuffledStackCards);
+		getShuffledStackCards(&shuffledStackCards, winner, looser);
+		if (shuffledStackCards.FirstCard->value.Number > 14 || shuffledStackCards.FirstCard->value.Number<2)
+		{
+			printf("SRANE\n");
+		}
+		MoveQueueToQueue(&winner -> HandCards, &shuffledStackCards);
+	}
 }
 
 void AddFirstCardToStack(PlayerData *player)
@@ -41,9 +53,9 @@ void HandleComparingCards(GameState *gameState)
 	CardQueueItem *item = gameState -> Player1Data.HandCards.FirstCard;
 
 	if (player1CardPower > player2CardPower)
-		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data);
+		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data, gameState -> GameRules);
 	else if (player1CardPower < player2CardPower)
-		handleBattleWon(&gameState -> Player2Data, &gameState -> Player1Data);
+		handleBattleWon(&gameState -> Player2Data, &gameState -> Player1Data, gameState -> GameRules);
 	else
 		War(gameState);
 
@@ -66,21 +78,20 @@ int finishGameIfWarNotPossible(GameState *gameState)
 	return TRUE;
 }
 
-void initQueues(PlayerData *playerData)
+void initPlayer(PlayerData *playerData)
 {
+	playerData -> UsedEnemyCardsInWar = 0;
 	InitCardsQueue(&playerData -> HandCards);
 	InitCardsQueue(&playerData -> StackCards);
 }
 
 void InitGame(GameState *gameState, WarOption warOption, int randomSeed)
 {
-	gameState -> Player1Data.UsedEnemyCardsInWar = 0;
-	gameState -> Player2Data.UsedEnemyCardsInWar = 0;
 	gameState -> RandomSeed = randomSeed;
 	gameState -> TurnsCount = 0;
 	gameState -> WarOption = warOption;
 	gameState -> Winner = NULL;
 
-	initQueues(&gameState -> Player1Data);
-	initQueues(&gameState -> Player2Data);
+	initPlayer(&gameState -> Player1Data);
+	initPlayer(&gameState -> Player2Data);
 }
