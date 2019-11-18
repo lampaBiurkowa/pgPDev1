@@ -88,8 +88,8 @@ void SwapFrontTwoCards(CardsQueue *queue)
 {
 	Card firstCard = PopFrontCard(queue);
 	Card secondCard = PopFrontCard(queue);
-	PushBackCard(queue, firstCard);
-	PushBackCard(queue, secondCard);
+	PushFrontCard(queue, firstCard);
+	PushFrontCard(queue, secondCard);
 }
 
 void MoveQueueToQueue(CardsQueue *destination, CardsQueue *source)

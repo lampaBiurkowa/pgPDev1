@@ -31,11 +31,12 @@ void playSmartGame(int deckSize, WarOption warOption, GameState *gameState, int 
 	PlayerData *startingPlayer;
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
+		//printf("starting: %i\n", startingPlayerIndex + 1);
 		if (startingPlayerIndex == 0)
 			startingPlayer = &gameState -> Player1Data;
 		else
 			startingPlayer = &gameState -> Player2Data;
-		startingPlayer = (startingPlayerIndex + 1) % 2;
+		startingPlayerIndex = (startingPlayerIndex + 1) % 2;
 
 		SmartBattle(gameState, startingPlayer);
 		if (gameState -> Winner == &gameState -> Player1Data)
@@ -49,7 +50,7 @@ StatsHandler RunTest(TestData *testData)
 {
 	StatsHandler statsHandler;
 	InitStatsHandler(&statsHandler);
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < testData -> Repeat; i++)
 	{
 		if (testData -> GameState.GameRules == STANDARD)
 			playStandardGame(testData -> GameState.CardsPerColor, testData -> GameState.WarOption, &testData -> GameState, i);

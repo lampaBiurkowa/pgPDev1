@@ -1,18 +1,21 @@
 #include "SmartGameEngine.h"
 
-Card smartSelectRandomly(CardsQueue *ownHandCards) //TODO seed
+Card smartSelectRandomly(CardsQueue *ownHandCards)
 {
-	srand(time(NULL));
+	static int seed;
+	srand(time(NULL) + seed);
 	if (rand() % CARDS_TO_CHOOSE_FROM_COUNT == 0)
 		SwapFrontTwoCards(ownHandCards);
+
+	seed = (seed + 1) % 10000;
 }
 
 Card smartSelectDefensively(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
 {
 	CardQueueItem *firstCardItem = ownHandCards -> FirstCard;
 	Card firstCard = firstCardItem -> value;
-	Card secondCard = firstCardItem -> next -> value;
-	if (opponentStackCards -> FirstCard -> value.Number == secondCard.Number || secondCard.Number < firstCard.Number)
+	Card secondCard = firstCardItem -> previous -> value;
+	if (opponentStackCards -> FirstCard -> value.Number == firstCard.Number || secondCard.Number < firstCard.Number)
 		SwapFrontTwoCards(ownHandCards);
 }
 
@@ -20,7 +23,7 @@ Card smartSelectOffensively(CardsQueue *ownHandCards, CardsQueue *opponentStackC
 {
 	CardQueueItem *firstCardItem = ownHandCards -> FirstCard;
 	Card firstCard = firstCardItem -> value;
-	Card secondCard = firstCardItem -> next -> value;
+	Card secondCard = firstCardItem -> previous -> value;
 	if (opponentStackCards -> FirstCard -> value.Number == secondCard.Number || secondCard.Number > firstCard.Number)
 		SwapFrontTwoCards(ownHandCards);
 }

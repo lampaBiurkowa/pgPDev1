@@ -51,10 +51,10 @@ int main()
 		StatsHandler statsHandler = RunTest(&testData);
 		printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", i * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
 	}
-
+	
 	printf("\nLosowa vs Losowa\n");
-	testData.Player1Strategy = RANDOMLY;
-	testData.Player2Strategy = RANDOMLY;
+	testData.Player1Strategy = DEFENSIVE;
+	testData.Player2Strategy = OFFENSIVE;
 	GameState gameState;
 	gameState.CardsPerColor = 13;
 	gameState.WarOption = WITHOUT_REFILL;
@@ -63,7 +63,7 @@ int main()
 	StatsHandler statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
 
-
+	
 	printf("\nLosowa vs Wsciekla\n");
 	testData.Player1Strategy = RANDOMLY;
 	testData.Player2Strategy = OFFENSIVE;
@@ -113,6 +113,6 @@ int main()
 	testData.GameState = gameState;
 	statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
-
+	
 	return 0;
 }

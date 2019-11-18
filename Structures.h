@@ -5,6 +5,8 @@
 #define FALSE (0)
 #define TRUE (1)
 
+#include <stdio.h> //TODO remove
+
 typedef struct Card
 {
 	enum { PIK, KARO, TREFL, KIER } Color;

@@ -1,7 +1,6 @@
 #include "StandardGameEngine.h"
 #include <time.h>
 
-#include <stdio.h> //TODO remove
 
 void Battle(GameState *gameState)
 {

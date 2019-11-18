@@ -43,10 +43,40 @@ void HandleComparingCards(GameState *gameState)
 	if (gameState -> Winner != NULL)
 		return;
 
+	//printf("p1sc: ");
+	CardQueueItem *item = gameState -> Player1Data.StackCards.FirstCard;
+	for (int i = 0; i < gameState -> Player1Data.StackCards.CardsCount; i++)
+	{
+		//printf("%i|", item->value.Number);
+		item = item->previous;
+	}
+	//printf("hc:, ");
+	item = gameState -> Player1Data.HandCards.FirstCard;
+	for (int i = 0; i < gameState -> Player1Data.HandCards.CardsCount; i++)
+	{
+		//printf("%i|", item->value.Number);
+		item = item->previous;
+	}
+	
+	//printf(" p2sc: ");
+	item = gameState -> Player2Data.StackCards.FirstCard;
+	for (int i = 0; i < gameState -> Player2Data.StackCards.CardsCount; i++)
+	{
+		//printf("%i|", item->value.Number);
+		item = item->previous;
+	}
+	//printf("hc:, ");
+	item = gameState -> Player2Data.HandCards.FirstCard;
+	for (int i = 0; i < gameState -> Player2Data.HandCards.CardsCount; i++)
+	{
+		//printf("%i|", item->value.Number);
+		item = item->previous;
+	}
+	//printf(" tc %i\n", gameState -> TurnsCount);
 	int player1CardPower = gameState -> Player1Data.StackCards.FirstCard -> value.Number;
 	int player2CardPower = gameState -> Player2Data.StackCards.FirstCard -> value.Number;
 
-	CardQueueItem *item = gameState -> Player1Data.HandCards.FirstCard;
+	item = gameState -> Player1Data.HandCards.FirstCard;
 
 	if (player1CardPower > player2CardPower)
 		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data, gameState -> GameRules);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StandardGameEngine.h"
+#include "SmartGameEngine.h"
 
 typedef struct StatsHandler
 {
