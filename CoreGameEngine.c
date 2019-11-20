@@ -76,8 +76,6 @@ void HandleComparingCards(GameState *gameState)
 	int player1CardPower = gameState -> Player1Data.StackCards.FirstCard -> value.Number;
 	int player2CardPower = gameState -> Player2Data.StackCards.FirstCard -> value.Number;
 
-	item = gameState -> Player1Data.HandCards.FirstCard;
-
 	if (player1CardPower > player2CardPower)
 		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data, gameState -> GameRules);
 	else if (player1CardPower < player2CardPower)

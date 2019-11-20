@@ -27,7 +27,7 @@ void playSmartGame(int deckSize, WarOption warOption, GameState *gameState, int 
 {
 	InitGame(gameState, warOption, seed);
 	GiveCards(gameState);
-	int startingPlayerIndex = 0;
+	int startingPlayerIndex = 1;
 	PlayerData *startingPlayer;
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{

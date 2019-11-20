@@ -4,8 +4,12 @@ Card smartSelectRandomly(CardsQueue *ownHandCards)
 {
 	static int seed;
 	srand(time(NULL) + seed);
-	if (rand() % CARDS_TO_CHOOSE_FROM_COUNT == 0)
+	if (rand() % CARDS_TO_CHOOSE_FROM_COUNT == 0) {
 		SwapFrontTwoCards(ownHandCards);
+		//printf("sraka %i\n", seed);
+	}
+	else
+		;// printf("asdf\n %i", seed);
 
 	seed = (seed + 1) % 10000;
 }
@@ -35,7 +39,7 @@ void chooseCardWithStrategy(PlayerData *startingPlayer, PlayerData *selectingPla
 	else if (selectingPlayer -> Strategy == OFFENSIVE)
 		smartSelectOffensively(&selectingPlayer -> HandCards, &startingPlayer -> StackCards);
 	else
-		smartSelectRandomly(&selectingPlayer -> HandCards, &startingPlayer -> StackCards);
+		smartSelectRandomly(&selectingPlayer -> HandCards);
 }
 
 void appendStackInSmartBattle(PlayerData *startingPlayer, PlayerData *selectingPlayer)
@@ -49,8 +53,7 @@ void appendStackInSmartBattle(PlayerData *startingPlayer, PlayerData *selectingP
 void SmartBattle(GameState *gameState, PlayerData *startingPlayer)
 {
 	gameState -> TurnsCount++;
-	Card *cards = malloc(sizeof(Card) * CARDS_TO_CHOOSE_FROM_COUNT);
-
+	
 	if (startingPlayer == &gameState -> Player1Data)
 		appendStackInSmartBattle(&gameState -> Player1Data, &gameState -> Player2Data);
 	else
