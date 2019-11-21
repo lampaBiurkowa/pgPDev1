@@ -1,5 +1,6 @@
 #include "Rank.h"
 #include "Structures.h"
+#include "CardsDeliverer.h"
 
 int GetCardRank(int cardNumber)
 {

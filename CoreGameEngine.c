@@ -109,11 +109,24 @@ void initPlayer(PlayerData *playerData)
 	InitCardsQueue(&playerData -> StackCards);
 }
 
-void InitGame(GameState *gameState, WarOption warOption, int randomSeed)
+void InitGame(GameState *gameState, WarOption warOption, GameRules gameRules, int cardsPerColor)
 {
-	gameState -> RandomSeed = randomSeed;
+	const int DEFAULT_SEED = 0;
+
+	gameState -> CardsPerColor = cardsPerColor;
+	gameState -> GameRules = gameRules;
+	gameState -> RandomSeed = DEFAULT_SEED;
 	gameState -> TurnsCount = 0;
 	gameState -> WarOption = warOption;
+	gameState -> Winner = NULL;
+
+	initPlayer(&gameState -> Player1Data);
+	initPlayer(&gameState -> Player2Data);
+}
+
+void ResetGame(GameState *gameState)
+{
+	gameState -> TurnsCount = 0;
 	gameState -> Winner = NULL;
 
 	initPlayer(&gameState -> Player1Data);

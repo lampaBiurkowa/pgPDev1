@@ -22,7 +22,7 @@ int cardAlreadyGiven(Card *cardConsidered, Card cardsGiven[], int cardsGivenCoun
 
 void generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[], unsigned int seed)
 {
-	srand(time(NULL) + seed * 7); //?
+	srand(time(NULL) + seed * 7); //TODO ?
 
 	int cardsGivenCount = 0;
 	while (cardsGivenCount < cardsPerColors * COLORS_COUNT)
@@ -157,7 +157,6 @@ void ShuffleCards(CardsQueue *queue)
 void GetCardsForRank(int rank, GameState *gameState)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
-
 
 	if (rank < GetMinRankForDeckSize(gameState -> CardsPerColor))
 		rank = GetMinRankForDeckSize(gameState -> CardsPerColor);

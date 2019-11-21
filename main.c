@@ -9,22 +9,15 @@
 #include "UserInterface.h"
 
 int main()
-{
-
-	/*TestData testData;
+{/*
+	TestData testData;
 	testData.Repeat = 1000;
-	GameState test;
-	test.CardsPerColor = 13;
-	InitGame(&test, WITHOUT_REFILL, 123);
-	GetCardsForRank(0, &test);
 
 	printf("WARIANT A\n");
 	for (int i = 8; i <= 13; i++)
 	{
 		GameState gameState;
-		gameState.CardsPerColor = i;
-		gameState.WarOption = WITHOUT_REFILL;
-		gameState.GameRules = STANDARD;
+		InitGame(&gameState, WITHOUT_REFILL, STANDARD, i);
 		testData.GameState = gameState;
 		StatsHandler statsHandler = RunTest(&testData);
 		printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", i * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
@@ -33,9 +26,7 @@ int main()
 	for (int i = 8; i <= 13; i++)
 	{
 		GameState gameState;
-		gameState.CardsPerColor = i;
-		gameState.WarOption = WITH_REFILL;
-		gameState.GameRules = STANDARD;
+		InitGame(&gameState, WITH_REFILL, STANDARD, i);
 		testData.GameState = gameState;
 		StatsHandler statsHandler = RunTest(&testData);
 		printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", i * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
@@ -46,23 +37,17 @@ int main()
 	for (int i = 8; i <= 13; i++)
 	{
 		GameState gameState;
-		gameState.CardsPerColor = i;
-		gameState.WarOption = WITHOUT_REFILL;
-		gameState.GameRules = SMART;
+		InitGame(&gameState, WITHOUT_REFILL, SMART, i);
 		testData.GameState = gameState;
 		StatsHandler statsHandler = RunTest(&testData);
 		printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", i * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
 	}
 	
-	
-	
 	printf("\nLosowa vs Losowa\n");
 	testData.Player1Strategy = RANDOMLY;
 	testData.Player2Strategy = RANDOMLY;
 	GameState gameState;
-	gameState.CardsPerColor = 8;
-	gameState.WarOption = WITHOUT_REFILL;
-	gameState.GameRules = SMART;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
 	testData.GameState = gameState;
 	StatsHandler statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
@@ -70,9 +55,7 @@ int main()
 	printf("\nLosowa vs Wsciekla\n");
 	testData.Player1Strategy = RANDOMLY;
 	testData.Player2Strategy = OFFENSIVE;
-	gameState.CardsPerColor = 13;
-	gameState.WarOption = WITHOUT_REFILL;
-	gameState.GameRules = SMART;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
 	testData.GameState = gameState;
 	statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
@@ -80,9 +63,7 @@ int main()
 	printf("\nLosowa vs Pokojowa\n");
 	testData.Player1Strategy = RANDOMLY;
 	testData.Player2Strategy = DEFENSIVE;
-	gameState.CardsPerColor = 13;
-	gameState.WarOption = WITHOUT_REFILL;
-	gameState.GameRules = SMART;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
 	testData.GameState = gameState;
 	statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
@@ -90,9 +71,7 @@ int main()
 	printf("\nWsciekla vs Wsciekla\n");
 	testData.Player1Strategy = OFFENSIVE;
 	testData.Player2Strategy = OFFENSIVE;
-	gameState.CardsPerColor = 13;
-	gameState.WarOption = WITHOUT_REFILL;
-	gameState.GameRules = SMART;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
 	testData.GameState = gameState;
 	statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
@@ -100,9 +79,7 @@ int main()
 	printf("\nWsciekla vs Pokojowa\n");
 	testData.Player1Strategy = OFFENSIVE;
 	testData.Player2Strategy = DEFENSIVE;
-	gameState.CardsPerColor = 13;
-	gameState.WarOption = WITHOUT_REFILL;
-	gameState.GameRules = SMART;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
 	testData.GameState = gameState;
 	statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
@@ -110,14 +87,11 @@ int main()
 	printf("\nPokojowa vs Pokojowa\n");
 	testData.Player1Strategy = DEFENSIVE;
 	testData.Player2Strategy = DEFENSIVE;
-	gameState.CardsPerColor = 13;
-	gameState.WarOption = WITHOUT_REFILL;
-	gameState.GameRules = SMART;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
 	testData.GameState = gameState;
 	statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
 	*/
-
 	ShowEntryScreen();
 
 	return 0;

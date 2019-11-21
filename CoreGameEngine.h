@@ -32,4 +32,5 @@ typedef struct GameState
 
 void AddFirstCardToStack(PlayerData *player);
 void HandleComparingCards(GameState *gameState);
-void InitGame(GameState *gameState, WarOption warOption, int randomSeed);
+void InitGame(GameState *gameState, WarOption warOption, GameRules gameRules, int cardsPerColor);
+void ResetGame(GameState *gameState);

@@ -9,10 +9,10 @@ void InitStatsHandler(StatsHandler *handler)
 	handler -> Player2VictoriesCount = 0;
 }
 
-void playStandardGame(int deckSize, WarOption warOption, GameState *gameState, int seed)
+void playStandardGame(GameState *gameState)
 {
-	InitGame(gameState, warOption, seed);
 	GiveCards(gameState);
+
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
 		Battle(gameState);
@@ -23,11 +23,10 @@ void playStandardGame(int deckSize, WarOption warOption, GameState *gameState, i
 	}
 }
 
-void playSmartGame(int deckSize, WarOption warOption, GameState *gameState, int seed)
+void playSmartGame(GameState *gameState)
 {
-	InitGame(gameState, warOption, seed);
 	GiveCards(gameState);
-	int startingPlayerIndex = 1;
+	int startingPlayerIndex = rand(time(NULL)) % 2;
 	PlayerData *startingPlayer;
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
@@ -52,10 +51,12 @@ StatsHandler RunTest(TestData *testData)
 	InitStatsHandler(&statsHandler);
 	for (int i = 0; i < testData -> Repeat; i++)
 	{
+		ResetGame(&testData -> GameState);
+		testData -> GameState.RandomSeed = i;
 		if (testData -> GameState.GameRules == STANDARD)
-			playStandardGame(testData -> GameState.CardsPerColor, testData -> GameState.WarOption, &testData -> GameState, i);
+			playStandardGame(&testData -> GameState);
 		else
-			playSmartGame(testData -> GameState.CardsPerColor, testData -> GameState.WarOption, &testData -> GameState, i);
+			playSmartGame(&testData -> GameState);
 
 		if (testData -> GameState.Winner == &testData -> GameState.Player1Data)
 			statsHandler.Player1VictoriesCount++;

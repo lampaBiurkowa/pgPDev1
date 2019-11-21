@@ -1,7 +1,6 @@
 #include "StandardGameEngine.h"
 #include <time.h>
 
-
 void Battle(GameState *gameState)
 {
 	gameState -> TurnsCount++;
@@ -45,7 +44,7 @@ void buildStackWithHelp(PlayerData *helpingPlayer, PlayerData *playerNeedingHelp
 
 int performWarOptionWithRefillIfPossible(GameState *gameState)
 {
-	if (gameState -> Player1Data.HandCards.CardsCount <= 2) //TODO & > 0?
+	if (gameState -> Player1Data.HandCards.CardsCount <= 2) //TODO && > 0?
 	{
 		if (gameState -> Player1Data.UsedEnemyCardsInWar == 0)
 		{
