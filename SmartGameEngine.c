@@ -1,15 +1,12 @@
 #include "SmartGameEngine.h"
+#include "conio.h"
 
 Card smartSelectRandomly(CardsQueue *ownHandCards)
 {
 	static int seed;
 	srand(time(NULL) + seed);
-	if (rand() % CARDS_TO_CHOOSE_FROM_COUNT == 0) {
+	if (rand() % CARDS_TO_CHOOSE_FROM_COUNT == 0)
 		SwapFrontTwoCards(ownHandCards);
-		//printf("sraka %i\n", seed);
-	}
-	else
-		;// printf("asdf\n %i", seed);
 
 	seed = (seed + 1) % 10000;
 }
@@ -32,12 +29,25 @@ Card smartSelectOffensively(CardsQueue *ownHandCards, CardsQueue *opponentStackC
 		SwapFrontTwoCards(ownHandCards);
 }
 
+Card smartSelectByUser(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
+{
+	CardQueueItem *firstCardItem = ownHandCards -> FirstCard;
+	Card firstCard = firstCardItem -> value;
+	Card secondCard = firstCardItem -> previous -> value;
+	int choice;
+	scanf_s("%i", &choice);
+	if (choice)
+		SwapFrontTwoCards(ownHandCards);
+}
+
 void chooseCardWithStrategy(PlayerData *startingPlayer, PlayerData *selectingPlayer)
 {
-	if (selectingPlayer -> Strategy == DEFENSIVE)
+	if (selectingPlayer -> Strategy == DEFENSIVE) //TODO SWITCH ?
 		smartSelectDefensively(&selectingPlayer -> HandCards, &startingPlayer -> StackCards);
 	else if (selectingPlayer -> Strategy == OFFENSIVE)
 		smartSelectOffensively(&selectingPlayer -> HandCards, &startingPlayer -> StackCards);
+	else if (selectingPlayer -> Strategy == USER)
+		smartSelectByUser(&selectingPlayer -> HandCards, &startingPlayer -> StackCards);
 	else
 		smartSelectRandomly(&selectingPlayer -> HandCards);
 }

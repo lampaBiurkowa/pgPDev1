@@ -7,9 +7,11 @@
 
 #include <stdio.h> //TODO remove
 
+typedef enum { PIK, KARO, TREFL, KIER } CardColor;
+
 typedef struct Card
 {
-	enum { PIK, KARO, TREFL, KIER } Color;
+	CardColor Color;
 	int Number;
 	int Id;
 } Card;

@@ -6,7 +6,7 @@
 #define YOUNGEST_CARD_NUMBER (2)
 
 typedef enum GameRules { STANDARD, SMART } GameRules;
-typedef enum Strategy { DEFENSIVE, OFFENSIVE, RANDOMLY } Strategy;
+typedef enum Strategy { DEFENSIVE, OFFENSIVE, RANDOMLY, USER } Strategy;
 typedef enum WarOption { WITH_REFILL, WITHOUT_REFILL } WarOption;
 
 typedef struct PlayerData
