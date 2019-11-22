@@ -34,9 +34,13 @@ Card smartSelectByUser(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
 	CardQueueItem *firstCardItem = ownHandCards -> FirstCard;
 	Card firstCard = firstCardItem -> value;
 	Card secondCard = firstCardItem -> previous -> value;
+	Card opponentCard = opponentStackCards -> FirstCard -> value;
+	printf("Twoj wybor!\n");
+	printf("Karta na szcycie stosu przeciwnika: |%i %s|\n", opponentCard.Number, GetCardSuitName(opponentCard.Id));
+	printf("Wybierz jedna z kart (podaj 1 lub 2): 1 - |%i %s|, 2 - |%i %s|:", firstCard.Number, GetCardSuitName(firstCard.Color), secondCard.Number, GetCardSuitName(secondCard.Color));
 	int choice;
 	scanf_s("%i", &choice);
-	if (choice)
+	if (choice == 2)
 		SwapFrontTwoCards(ownHandCards);
 }
 

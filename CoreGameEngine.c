@@ -1,5 +1,6 @@
-#include "CoreGameEngine.h"
 #include "CardsDeliverer.h"
+#include "CoreGameEngine.h"
+#include "GameDataPrinter.h"
 
 void getShuffledStackCards(CardsQueue *allStackCards, PlayerData *player1, PlayerData *player2)
 {	
@@ -40,9 +41,15 @@ void handleVictory(GameState *gameState)
 
 void printTurnData(GameState *gameState)
 {
-	Card player1CurrentCard = gameState -> Player1Data.StackCards.FirstCard->value;
-	printf("Gracz 1 zagrywa: %i %s ", player1CurrentCard.Number, GetCardSuitName(player1CurrentCard.Color));
-	Card player2CurrentCard = gameState -> Player2Data.StackCards.FirstCard->value;
+	printf("==========Ruch nr %i ===========\n", gameState -> TurnsCount);
+	printf("Karty w rece Gracza 1 (od pierwszej karty):\n");
+	PrintCardsQueue(&gameState -> Player1Data.HandCards);
+	printf("\nKarty w rece Gracza 2 (od pierwszej karty):\n");
+	PrintCardsQueue(&gameState -> Player2Data.HandCards);
+
+	Card player1CurrentCard = gameState -> Player1Data.StackCards.FirstCard -> value;
+	printf("Gracz 1 zagrywa: %i %s, ", player1CurrentCard.Number, GetCardSuitName(player1CurrentCard.Color));
+	Card player2CurrentCard = gameState -> Player2Data.StackCards.FirstCard -> value;
 	printf("Gracz 2 zagrywa: %i %s\n", player2CurrentCard.Number, GetCardSuitName(player2CurrentCard.Color));
 }
 

@@ -10,7 +10,7 @@
 
 int main()
 {
-	Demonstrate();
+	//Demonstrate();
 	/*
 	TestData testData;
 	testData.Repeat = 1000;
@@ -94,7 +94,7 @@ int main()
 	statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
 	*/
-	//ShowEntryScreen();
+	ShowEntryScreen();
 
 	return 0;
 }
