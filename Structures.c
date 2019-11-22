@@ -98,3 +98,20 @@ void MoveQueueToQueue(CardsQueue *destination, CardsQueue *source)
 	for (int i = 0; i < cardsToTakeAmount; i++)
 		PushBackCard(destination, PopFrontCard(source));
 }
+
+const char *GetCardSuitName(CardColor color)
+{
+	switch (color)
+	{
+	case KARO:
+		return "KARO";
+	case KIER:
+		return "KIER";
+	case PIK:
+		return "PIK";
+	case TREFL:
+		return "KIER";
+	default:
+		return "???";
+	}
+}

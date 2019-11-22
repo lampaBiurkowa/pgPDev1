@@ -32,7 +32,7 @@ typedef struct CardsQueue
 	int CardsCount;
 } CardsQueue;
 
-
+const char *GetCardSuitName(CardColor color);
 void InitCardsQueue(CardsQueue *queue);
 void MoveQueueToQueue(CardsQueue *destination, CardsQueue *source);
 Card PopFrontCard(CardsQueue *queue);

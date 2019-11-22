@@ -30,7 +30,6 @@ void playSmartGame(GameState *gameState)
 	PlayerData *startingPlayer;
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
-		//printf("starting: %i\n", startingPlayerIndex + 1);
 		if (startingPlayerIndex == 0)
 			startingPlayer = &gameState -> Player1Data;
 		else
@@ -43,6 +42,44 @@ void playSmartGame(GameState *gameState)
 		else if (gameState -> Winner == &gameState -> Player2Data)
 			break;
 	}
+}
+
+int getCardsPerColorFromUser()
+{
+	const int MIN_CARDS_PER_COLOR = 1;
+	const int MAX_CARDS_PER_COLOR = DECK_MAX_SIZE / COLORS_COUNT;
+
+	printf("Podaj rozmiar talii (ilosc kart na kolor: %i - %i)\n", MIN_CARDS_PER_COLOR, MAX_CARDS_PER_COLOR);
+	int value;
+	while (scanf_s("%i", &value))
+		if (value >= MIN_CARDS_PER_COLOR && value <= MAX_CARDS_PER_COLOR)
+			return value;
+}
+
+WarOption getWarOptionFromUser()
+{
+	const char A_VARIANT_ID = 'A';
+	const char B_VARIANT_ID = 'B';
+
+	char variant;
+	printf("Podaj wartiant gry (%c lub %c)\n", A_VARIANT_ID, B_VARIANT_ID);
+	while (scanf_s("%c", &variant))
+		if (variant == A_VARIANT_ID || variant == B_VARIANT_ID)
+			break;
+
+	return variant == A_VARIANT_ID ? WITHOUT_REFILL : WITH_REFILL;
+}
+
+void Demonstrate()
+{
+	GameState gameState;
+	InitGame(&gameState, getWarOptionFromUser(), STANDARD, getCardsPerColorFromUser());
+	gameState.PrintResults = TRUE;
+
+	TestData testData;
+	testData.GameState = gameState;
+	testData.Repeat = 1;
+	RunTest(&testData);
 }
 
 StatsHandler RunTest(TestData *testData)

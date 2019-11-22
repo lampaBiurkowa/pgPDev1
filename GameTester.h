@@ -19,5 +19,6 @@ typedef struct TestData
 	Strategy Player2Strategy;
 } TestData;
 
+void Demonstrate();
 void InitStatsHandler(StatsHandler *statsHandler);
 StatsHandler RunTest(TestData *testData);

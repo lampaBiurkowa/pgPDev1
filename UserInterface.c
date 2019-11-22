@@ -5,23 +5,6 @@
 
 #define CARDS_TO_SHOW_PER_ROW (8)
 
-const char *getCardSuitName(CardColor color)
-{
-	switch (color)
-	{
-	case KARO:
-		return "KARO";
-	case KIER:
-		return "KIER";
-	case PIK:
-		return "PIK";
-	case TREFL:
-		return "KIER";
-	default:
-		return "???";
-	}
-}
-
 void showPreBattleData(GameState *gameState)
 {
 	system("cls");
@@ -33,17 +16,9 @@ void showPreBattleData(GameState *gameState)
 		if (i % CARDS_TO_SHOW_PER_ROW == 0 && i != 0)
 			printf("\n");
 
-		printf("|%i %s| ", item -> value.Number, getCardSuitName(item -> value.Color));
+		printf("|%i %s| ", item -> value.Number, GetCardSuitName(item -> value.Color));
 		item = item -> previous;
 	}
-
-	printf("Szczyt mojego stosu (%i kart na stosie):\n", gameState -> Player1Data.StackCards.CardsCount);
-	item = gameState -> Player1Data.StackCards.FirstCard;
-	printf("|%i %s|");
-
-	printf("Szczyt stosu przeciwnika (%i kart na stosie):\n", gameState -> Player2Data.StackCards.CardsCount);
-	item = gameState -> Player2Data.StackCards.FirstCard;
-	printf("|%i %s|");
 
 	printf("\nKolejka: %i, ilosc moich kart w rece: %i, ilosc kart przeciwnika w rece: %i", gameState -> TurnsCount, gameState -> Player1Data.HandCards.CardsCount, gameState -> Player2Data.HandCards.CardsCount);
 }

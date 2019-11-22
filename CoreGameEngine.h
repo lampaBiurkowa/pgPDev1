@@ -24,6 +24,7 @@ typedef struct GameState
 	GameRules GameRules;
 	PlayerData Player1Data;
 	PlayerData Player2Data;
+	int PrintResults;
 	int RandomSeed;
 	int TurnsCount;
 	WarOption WarOption;

@@ -38,43 +38,54 @@ void handleVictory(GameState *gameState)
 		gameState -> Winner = &gameState -> Player1Data;
 }
 
+void printTurnData(GameState *gameState)
+{
+	Card player1CurrentCard = gameState -> Player1Data.StackCards.FirstCard->value;
+	printf("Gracz 1 zagrywa: %i %s ", player1CurrentCard.Number, GetCardSuitName(player1CurrentCard.Color));
+	Card player2CurrentCard = gameState -> Player2Data.StackCards.FirstCard->value;
+	printf("Gracz 2 zagrywa: %i %s\n", player2CurrentCard.Number, GetCardSuitName(player2CurrentCard.Color));
+}
+
 void HandleComparingCards(GameState *gameState)
 {
 	if (gameState -> Winner != NULL)
 		return;
 
-	//printf("p1sc: ");
+	/*printf("p1sc: ");
 	CardQueueItem *item = gameState -> Player1Data.StackCards.FirstCard;
 	for (int i = 0; i < gameState -> Player1Data.StackCards.CardsCount; i++)
 	{
-		//printf("%i|", item->value.Number);
+		printf("%i|", item->value.Number);
 		item = item->previous;
 	}
-	//printf("hc:, ");
+	printf("hc:, ");
 	item = gameState -> Player1Data.HandCards.FirstCard;
 	for (int i = 0; i < gameState -> Player1Data.HandCards.CardsCount; i++)
 	{
-		//printf("%i|", item->value.Number);
+		printf("%i|", item->value.Number);
 		item = item->previous;
 	}
 	
-	//printf(" p2sc: ");
+	printf(" p2sc: ");
 	item = gameState -> Player2Data.StackCards.FirstCard;
 	for (int i = 0; i < gameState -> Player2Data.StackCards.CardsCount; i++)
 	{
-		//printf("%i|", item->value.Number);
+		printf("%i|", item->value.Number);
 		item = item->previous;
 	}
-	//printf("hc:, ");
+	printf("hc:, ");
 	item = gameState -> Player2Data.HandCards.FirstCard;
 	for (int i = 0; i < gameState -> Player2Data.HandCards.CardsCount; i++)
 	{
-		//printf("%i|", item->value.Number);
+		printf("%i|", item->value.Number);
 		item = item->previous;
 	}
-	//printf(" tc %i\n", gameState -> TurnsCount);
+	printf(" tc %i\n", gameState -> TurnsCount);*/
 	int player1CardPower = gameState -> Player1Data.StackCards.FirstCard -> value.Number;
 	int player2CardPower = gameState -> Player2Data.StackCards.FirstCard -> value.Number;
+
+	if (gameState -> PrintResults)
+		printTurnData(gameState);
 
 	if (player1CardPower > player2CardPower)
 		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data, gameState -> GameRules);
@@ -115,6 +126,7 @@ void InitGame(GameState *gameState, WarOption warOption, GameRules gameRules, in
 
 	gameState -> CardsPerColor = cardsPerColor;
 	gameState -> GameRules = gameRules;
+	gameState -> PrintResults = FALSE;
 	gameState -> RandomSeed = DEFAULT_SEED;
 	gameState -> TurnsCount = 0;
 	gameState -> WarOption = warOption;
