@@ -35,4 +35,5 @@ typedef struct GameState
 void AddFirstCardToStack(PlayerData *player);
 void HandleComparingCards(GameState *gameState);
 void InitGame(GameState *gameState, WarOption warOption, GameRules gameRules, int cardsPerColor);
+void InitGameFromFile(GameState *gameState, const char *path, WarOption warOption, GameRules gameRules);
 void ResetGame(GameState *gameState);

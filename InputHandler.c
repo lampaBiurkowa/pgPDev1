@@ -25,21 +25,6 @@ void WriteInputData(const char *path, int cardsPerColor, int seed)
 	fclose(file);
 }
 
-char *getReadInputPattern(int cardsAmount)
-{
-	const int PATTERN_CHARS_PER_NUMBER_COUNT = 4;
-	char *output = (char *)malloc(sizeof(char) * cardsAmount * PATTERN_CHARS_PER_NUMBER_COUNT);
-	for (int i = 0; i < cardsAmount * PATTERN_CHARS_PER_NUMBER_COUNT; i += PATTERN_CHARS_PER_NUMBER_COUNT)
-	{
-		output[i] = '%';
-		output[i + 1] = '0';
-		output[i + 2] = '2';
-		output[i + 3] = 'i';
-	}
-
-	return output;
-}
-
 int getInputDeckSize(FILE *file)
 {
 	int size = 0;
@@ -54,18 +39,18 @@ int getInputDeckSize(FILE *file)
 	return size / 2 + 1; //TODO jw
 }
 
-GameState ReadInputData(const char *path)
+int GetCardNumbersFromFile(const char *path, int *arrayToFill)
 {
 	FILE *file;
 	fopen_s(&file, path, "r");
 
-	int nums[DECK_MAX_SIZE];
-	int size = getInputDeckSize(file);
-	for (int i = 0; i < size; i++)
+	int deckSize = getInputDeckSize(file);
+	for (int i = 0; i < deckSize; i++)
 	{
 		fseek(file, i * 2, SEEK_SET);
-		fscanf_s(file, "%02d", &nums[i]);
+		fscanf_s(file, "%02d", &arrayToFill[i]);
 	}
 
 	fclose(file);
+	return deckSize;
 }

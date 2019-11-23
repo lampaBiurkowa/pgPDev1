@@ -33,6 +33,7 @@ typedef struct CardsQueue
 	int CardsCount;
 } CardsQueue;
 
+void ClearCards(CardsQueue *queue);
 const char *GetCardSuitName(CardColor color);
 int GetCardNumberOccurrencesInQueue(CardsQueue *queue, int numberConsidered);
 void InitCardsQueue(CardsQueue *queue);

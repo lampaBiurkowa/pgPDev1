@@ -168,3 +168,22 @@ void GetCardsForRank(int rank, GameState *gameState)
 	ShuffleCards(&gameState -> Player1Data.HandCards);
 	ShuffleCards(&gameState -> Player2Data.HandCards);
 }
+
+void AssignCardNumbersFromArray(GameState *gameState, int *cardNumbers, int cardsCount)
+{
+	Card card;
+	for (int i = 0; i < cardsCount / 2; i++)
+	{
+		card.Number = cardNumbers[i];
+		int occurances = GetCardNumberOccurrencesInQueue(&gameState -> Player1Data.HandCards, card.Number);
+		card.Color = (CardColor)occurances; //from range 0 - 3
+		PushBackCard(&gameState -> Player1Data.HandCards, card);
+	}
+	for (int i = cardsCount / 2; i < cardsCount; i++)
+	{
+		card.Number = cardNumbers[i];
+		int occurances = GetCardNumberOccurrencesInQueue(&gameState -> Player1Data.HandCards, card.Number) + GetCardNumberOccurrencesInQueue(&gameState -> Player2Data.HandCards, card.Number);
+		card.Color = (CardColor)occurances; //from range 0 - 3
+		PushBackCard(&gameState -> Player2Data.HandCards, card);
+	}
+}

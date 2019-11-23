@@ -118,13 +118,13 @@ const char *GetCardSuitName(CardColor color)
 
 int GetCardNumberOccurrencesInQueue(CardsQueue *queue, int numberConsidered)
 {
-	int occurences = COLORS_COUNT;
+	int occurences = 0;
 
 	CardQueueItem *item = queue -> FirstCard;
 	for (int i = 0; i < queue -> CardsCount; i++)
 	{
 		if (item -> value.Number == numberConsidered)
-			occurences--;
+			occurences++;
 
 		item = item -> previous;
 	}

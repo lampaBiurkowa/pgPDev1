@@ -1,6 +1,7 @@
 #include "CardsDeliverer.h"
 #include "CoreGameEngine.h"
 #include "GameDataPrinter.h"
+#include "InputHandler.h"
 
 void getShuffledStackCards(CardsQueue *allStackCards, PlayerData *player1, PlayerData *player2)
 {	
@@ -150,4 +151,24 @@ void ResetGame(GameState *gameState)
 
 	initPlayer(&gameState -> Player1Data);
 	initPlayer(&gameState -> Player2Data);
+}
+
+void InitGameFromFile(GameState *gameState, const char *path, WarOption warOption, GameRules gameRules)
+{
+	const int DEFAULT_SEED = 0;
+
+	int *cardNumbers = (int *)malloc(DECK_MAX_SIZE * sizeof(int));
+	int cardsCount = GetCardNumbersFromFile(path, cardNumbers);
+
+	gameState -> CardsPerColor = cardsCount / COLORS_COUNT;
+	gameState -> GameRules = gameRules;
+	gameState -> PrintResults = FALSE;
+	gameState -> RandomSeed = DEFAULT_SEED;
+	gameState -> TurnsCount = 0;
+	gameState -> WarOption = warOption;
+	gameState -> Winner = NULL;
+
+	initPlayer(&gameState -> Player1Data);
+	initPlayer(&gameState -> Player2Data);
+	AssignCardNumbersFromArray(gameState, cardNumbers, cardsCount);
 }

@@ -11,7 +11,8 @@ void InitStatsHandler(StatsHandler *handler)
 
 void playStandardGame(GameState *gameState)
 {
-	GiveCards(gameState);
+	if (gameState -> Player1Data.HandCards.CardsCount == 0)
+		GiveCards(gameState);
 
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
@@ -25,7 +26,9 @@ void playStandardGame(GameState *gameState)
 
 void playSmartGame(GameState *gameState)
 {
-	GiveCards(gameState);
+	if (gameState -> Player1Data.HandCards.CardsCount == 0)
+		GiveCards(gameState);
+
 	int startingPlayerIndex = rand(time(NULL)) % 2;
 	PlayerData *startingPlayer;
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
@@ -88,7 +91,6 @@ StatsHandler RunTest(TestData *testData)
 	InitStatsHandler(&statsHandler);
 	for (int i = 0; i < testData -> Repeat; i++)
 	{
-		ResetGame(&testData -> GameState);
 		testData -> GameState.RandomSeed = i;
 		if (testData -> GameState.GameRules == STANDARD)
 			playStandardGame(&testData -> GameState);
@@ -102,6 +104,7 @@ StatsHandler RunTest(TestData *testData)
 
 		statsHandler.TurnsTotal += testData -> GameState.TurnsCount;
 		statsHandler.GamesPlayedCount++;
+		ResetGame(&testData -> GameState);
 	}
 
 	return statsHandler;

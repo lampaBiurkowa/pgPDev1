@@ -45,7 +45,7 @@ int makeSwapInEfficentStrategy(PlayerData *efficentPlayer, PlayerData *opponent)
 	int *opponentVeryStrongCardsCount = (int *)malloc(sizeof(int) * (MAX_CARD_NUMBER - VERY_STRONG_CARD_MIN_NUMBER + 1));
 	for (int i = VERY_STRONG_CARD_MIN_NUMBER; i <= MAX_CARD_NUMBER; i++)
 	{
-		opponentVeryStrongCardsCount[i - VERY_STRONG_CARD_MIN_NUMBER] = COLORS_COUNT - GetCardNumberOccurrencesInQueue(&efficentPlayer -> HandCards, i);
+		opponentVeryStrongCardsCount[i - VERY_STRONG_CARD_MIN_NUMBER] = GetCardNumberOccurrencesInQueue(&efficentPlayer -> HandCards, i);
 		if (opponentCard.Number == i)
 			opponentVeryStrongCardsCount[i - VERY_STRONG_CARD_MIN_NUMBER]++;
 	}
