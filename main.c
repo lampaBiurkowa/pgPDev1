@@ -2,7 +2,7 @@
 #include "StandardGameEngine.h"
 #include "SmartGameEngine.h"
 #include "GameTester.h"
-#include "InputReader.h"
+#include "InputHandler.h"
 #include "Structures.h"
 #include "Rank.h"
 #include "CardsDeliverer.h"
@@ -10,6 +10,8 @@
 
 int main()
 {
+	ReadInputData("teest.txt");
+	WriteInputData("howno.txt", 13, 0);
 	//Demonstrate();
 	/*
 	TestData testData;
@@ -93,8 +95,32 @@ int main()
 	testData.GameState = gameState;
 	statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
+
+	printf("\nPokojowa vs Efektywna\n");
+	testData.Player1Strategy = DEFENSIVE;
+	testData.Player2Strategy = EFFICENT;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
+	testData.GameState = gameState;
+	statsHandler = RunTest(&testData);
+	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
+
+	printf("\Ofensuwna vs Efektywna\n");
+	testData.Player1Strategy = OFFENSIVE;
+	testData.Player2Strategy = EFFICENT;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
+	testData.GameState = gameState;
+	statsHandler = RunTest(&testData);
+	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
+
+	printf("\Losowa vs Efektywna\n");
+	testData.Player1Strategy = RANDOMLY;
+	testData.Player2Strategy = EFFICENT;
+	InitGame(&gameState, WITHOUT_REFILL, SMART, 13);
+	testData.GameState = gameState;
+	statsHandler = RunTest(&testData);
+	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", 13 * COLORS_COUNT, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
 	*/
-	ShowEntryScreen();
+	//ShowEntryScreen();
 
 	return 0;
 }

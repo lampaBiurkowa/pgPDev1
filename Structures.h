@@ -1,6 +1,7 @@
 #pragma once
 
 #define DECK_MAX_SIZE (52) // 52 = 4 talie * 13 kart
+#define COLORS_COUNT (4)
 #define NULL (0)
 #define FALSE (0)
 #define TRUE (1)
@@ -33,6 +34,7 @@ typedef struct CardsQueue
 } CardsQueue;
 
 const char *GetCardSuitName(CardColor color);
+int GetCardNumberOccurrencesInQueue(CardsQueue *queue, int numberConsidered);
 void InitCardsQueue(CardsQueue *queue);
 void MoveQueueToQueue(CardsQueue *destination, CardsQueue *source);
 Card PopFrontCard(CardsQueue *queue);
