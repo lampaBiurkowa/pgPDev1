@@ -1,5 +1,6 @@
 #include "GameTester.h"
 #include "CardsDeliverer.h"
+#include "Rank.h"
 
 void InitTestData(TestData *testData, int repeat)
 {
@@ -20,8 +21,8 @@ void InitStatsHandler(StatsHandler *handler)
 
 void playStandardGame(GameState *gameState)
 {
-	if (gameState -> Player1Data.HandCards.CardsCount == 0)
-		GiveCards(gameState);
+	/*if (gameState -> Player1Data.HandCards.CardsCount == 0)
+		GiveCards(gameState);*/
 
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
@@ -35,8 +36,8 @@ void playStandardGame(GameState *gameState)
 
 void playSmartGame(GameState *gameState)
 {
-	if (gameState -> Player1Data.HandCards.CardsCount == 0)
-		GiveCards(gameState);
+	/*if (gameState -> Player1Data.HandCards.CardsCount == 0)
+		GiveCards(gameState);*/
 
 	int startingPlayerIndex = rand(time(NULL)) % 2;
 	PlayerData *startingPlayer;
@@ -94,6 +95,17 @@ void Demonstrate()
 	RunTest(&testData);
 }
 
+void assignCardsIfNotPreassigned(GameState *gameState, int player1Rank)
+{
+	if (gameState -> Player1Data.HandCards.CardsCount == 0)
+		return;
+
+	if (player1Rank >= GetMinRankForDeckSize(gameState -> CardsPerColor) && player1Rank <= GetMaxRankForDeckSize(gameState -> CardsPerColor)) //TODO  && player2? not hajba ale nwm jak z rank
+		GetCardsForRank(gameState, player1Rank);
+	else
+		GiveCards(gameState);
+}
+
 StatsHandler RunTest(TestData *testData)
 {
 	StatsHandler statsHandler;
@@ -101,6 +113,7 @@ StatsHandler RunTest(TestData *testData)
 	for (int i = 0; i < testData -> Repeat; i++)
 	{
 		testData -> GameState.RandomSeed = i;
+		assignCardsIfNotPreassigned(&testData -> GameState, testData -> Player1Rank);
 		if (testData -> GameState.GameRules == STANDARD)
 			playStandardGame(&testData -> GameState);
 		else

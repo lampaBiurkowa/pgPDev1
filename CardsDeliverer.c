@@ -154,7 +154,7 @@ void ShuffleCards(CardsQueue *queue)
 	assignShuffledCards(cardsCount, queue, newIndexesPlacement);
 }
 
-void GetCardsForRank(int rank, GameState *gameState)
+void GetCardsForRank(GameState *gameState, int rank)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
 
@@ -167,6 +167,7 @@ void GetCardsForRank(int rank, GameState *gameState)
 	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
 	ShuffleCards(&gameState -> Player1Data.HandCards);
 	ShuffleCards(&gameState -> Player2Data.HandCards);
+
 }
 
 void AssignCardNumbersFromArray(GameState *gameState, int *cardNumbers, int cardsCount)
