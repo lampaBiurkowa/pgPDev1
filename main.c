@@ -122,12 +122,13 @@ int main()
 	{
 		printf("Wybierz:\n");
 		printf("1 - pokazac wyniki problemu 1 gry w zwykla wojne\n");
-		printf("2 - zademonstrowac zwykla wojne\n");
-		printf("3 - pokazac wyniki problemu 1 gry w madra wojne\n");
-		printf("4 - pokazac wyniki problemu 2 gry w madra wojne\n");
-		printf("5 - zagrac z komputerem w zwykla wojne\n");
-		printf("6 - pokazac wyniki strategii gry w madra wojne na dodatkowe punkty\n");
-		printf("7 - pokazac wyniki gier z plikow\n");
+		printf("2 - pokazac wyniki problemu 2 gry w zwykla wojne\n");
+		printf("3 - zademonstrowac zwykla wojne\n");
+		printf("4 - pokazac wyniki problemu 1 gry w madra wojne\n");
+		printf("5 - pokazac wyniki problemu 2 gry w madra wojne\n");
+		printf("6 - zagrac z komputerem w zwykla wojne\n");
+		printf("7 - pokazac wyniki strategii gry w madra wojne na dodatkowe punkty\n");
+		printf("8 - pokazac wyniki gier z plikow\n");
 
 		while (scanf_s("%i", &choice))
 		{
@@ -137,25 +138,25 @@ int main()
 				standardGameProblem1();
 				break;
 			case 2:
-				Demonstrate();
+				standardGameProblem2();
 				break;
 			case 3:
-				smartGameProblem1();
+				Demonstrate();
 				break;
 			case 4:
-				smartGameProblem2();
+				smartGameProblem1();
 				break;
 			case 5:
-				ShowEntryScreen();
+				smartGameProblem2();
 				break;
 			case 6:
-				efficentStrategy();
+				ShowEntryScreen();
 				break;
 			case 7:
-				playFromFile();
+				efficentStrategy();
 				break;
 			case 8:
-				standardGameProblem2();
+				playFromFile();
 				break;
 			}
 		}

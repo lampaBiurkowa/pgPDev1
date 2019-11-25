@@ -97,7 +97,7 @@ void Demonstrate()
 
 void assignCardsIfNotPreassigned(GameState *gameState, int player1Rank)
 {
-	if (gameState -> Player1Data.HandCards.CardsCount == 0)
+	if (gameState -> Player1Data.HandCards.CardsCount != 0)
 		return;
 
 	if (player1Rank >= GetMinRankForDeckSize(gameState -> CardsPerColor) && player1Rank <= GetMaxRankForDeckSize(gameState -> CardsPerColor)) //TODO  && player2? not hajba ale nwm jak z rank

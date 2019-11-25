@@ -111,6 +111,20 @@ void generateCardsForRank(int cardsPerColors, int rank, Card arrayToFill[], unsi
 	}
 }
 
+void assignRemainingCards(int cardsPerColors, Card arrayPartlyFilled[])
+{
+	int cardsAlreadyGivenCount = (cardsPerColors * COLORS_COUNT) / 2;
+	while (cardsAlreadyGivenCount < cardsPerColors * COLORS_COUNT)
+	{
+		Card card = generateSingleRandomCard(cardsPerColors);
+		if (cardAlreadyGiven(&card, arrayPartlyFilled, cardsAlreadyGivenCount))
+			continue;
+
+		arrayPartlyFilled[cardsAlreadyGivenCount] = card;
+		cardsAlreadyGivenCount++;
+	}
+}
+
 int indexAlreadyPlaced(int index, int indexesAlreadyPlaced[], int indexesPlacedCount)
 {
 	for (int i = 0; i < indexesPlacedCount; i++)
@@ -164,10 +178,10 @@ void GetCardsForRank(GameState *gameState, int rank)
 		rank = GetMaxRankForDeckSize(gameState -> CardsPerColor);
 
 	generateCardsForRank(gameState -> CardsPerColor, rank, cards, gameState -> RandomSeed);
+	assignRemainingCards(gameState -> CardsPerColor, cards);
 	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
 	ShuffleCards(&gameState -> Player1Data.HandCards);
 	ShuffleCards(&gameState -> Player2Data.HandCards);
-
 }
 
 void AssignCardNumbersFromArray(GameState *gameState, int *cardNumbers, int cardsCount)
