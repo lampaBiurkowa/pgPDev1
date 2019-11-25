@@ -1,6 +1,15 @@
 #include "GameTester.h"
 #include "CardsDeliverer.h"
 
+void InitTestData(TestData *testData, int repeat)
+{
+	testData -> Repeat = repeat;
+	testData -> Player1Rank = 0;
+	testData -> Player2Rank = 0;
+	testData -> Player1Strategy = RANDOMLY;
+	testData -> Player2Strategy = RANDOMLY;
+}
+
 void InitStatsHandler(StatsHandler *handler)
 {
 	handler -> GamesPlayedCount = 0;

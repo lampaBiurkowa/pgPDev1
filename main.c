@@ -11,7 +11,7 @@
 void simulateGame(WarOption warOption, GameRules gameRules, int cardsPerColor, int repeat, Strategy player1Strategy, Strategy player2Strategy)
 {
 	TestData testData;
-	testData.Repeat = repeat;
+	InitTestData(&testData, repeat);
 	testData.Player1Strategy = player1Strategy;
 	testData.Player2Strategy = player2Strategy;
 	InitGame(&testData.GameState, warOption, gameRules, cardsPerColor);
@@ -32,8 +32,14 @@ void simulateGameFromFile(const char *fileName, WarOption warOption, GameRules g
 
 void playFromFile()
 {
+	char path[16] = "syf/hownoXX.txt";
 	printf("\nZ PLIKU\n");
-	simulateGameFromFile("teest.txt", WITHOUT_REFILL, STANDARD, 13, 1, RANDOMLY, RANDOMLY);
+	for (int i = 0; i < 100; i++)
+	{
+		path[9] = ((int)'0' + i / 10);
+		path[10] = ((int)'0' + i % 10);
+		simulateGameFromFile(path, WITHOUT_REFILL, STANDARD, 13, 1, RANDOMLY, RANDOMLY);
+	}
 }
 
 void standardGameProblem1()
@@ -51,6 +57,13 @@ void smartGameProblem1()
 	printf("\nMADRA WOJNA\n");
 	for (int i = 8; i <= 13; i++)
 		simulateGame(WITHOUT_REFILL, SMART, i, 1000, RANDOMLY, RANDOMLY);
+}
+
+void standardGameProblem2()
+{
+	printf("\nRANHI REKI\n");
+	for (int i = GetMinRankForDeckSize(13); i <= GetMaxRankForDeckSize(13); i++)
+		simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, RANDOMLY);
 }
 
 void smartGameProblem2()
@@ -86,6 +99,17 @@ void efficentStrategy()
 	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, EFFICENT);
 }
 
+void generateTestFiles()
+{
+	char path[16] = "syf/hownoXX.txt";
+	for (int i = 0; i < 100; i++)
+	{
+		path[9] = ((int)'0' + i / 10);
+		path[10] = ((int)'0' + i % 10);
+		WriteInputData(path, 13, i);
+	}
+}
+
 int main()
 {
 	int choice;
@@ -98,8 +122,7 @@ int main()
 		printf("4 - pokazac wyniki problemu 2 gry w madra wojne\n");
 		printf("5 - zagrac z komputerem w zwykla wojne\n");
 		printf("6 - pokazac wyniki strategii gry w madra wojne na dodatkowe punkty\n");
-		printf("7 - zesrac sie\n");
-		printf("8 - pokazac wyniki gier z plikow\n");
+		printf("7 - pokazac wyniki gier z plikow\n");
 
 		while (scanf_s("%i", &choice))
 		{
@@ -124,15 +147,11 @@ int main()
 				efficentStrategy();
 				break;
 			case 7:
-				printf("jea\n");
-				break;
-			case 8:
 				playFromFile();
 				break;
 			}
 		}
 	}
-	WriteInputData("howno.txt", 13, 0);
 
 	return 0;
 }

@@ -13,12 +13,15 @@ typedef struct StatsHandler
 
 typedef struct TestData
 {
-	int Repeat;
 	GameState GameState;
+	int Player1Rank;
+	int Player2Rank;
 	Strategy Player1Strategy;
 	Strategy Player2Strategy;
+	int Repeat;
 } TestData;
 
 void Demonstrate();
 void InitStatsHandler(StatsHandler *statsHandler);
+void InitTestData(TestData *testData, int repeat);
 StatsHandler RunTest(TestData *testData);
