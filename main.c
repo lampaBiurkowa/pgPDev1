@@ -71,7 +71,7 @@ void standardGameProblem2()
 		simulateGame(WITHOUT_REFILL, SMART, 13, 100, RANDOMLY, RANDOMLY, i, 8, i);
 	}
 	printf("\nRANHI REKI - WSZYSTKIE KARTY\n");
-	for (int i = GetMinRankForDeckSize(13, 8); i <= GetMaxRankForDeckSize(13, MIN_CARD_NUMBER); i++)
+	for (int i = GetMinRankForDeckSize(13, MIN_CARD_NUMBER); i <= GetMaxRankForDeckSize(13, MIN_CARD_NUMBER); i++)
 	{
 		printf("ranha %i: ", i);
 		simulateGame(WITHOUT_REFILL, SMART, 13, 100, RANDOMLY, RANDOMLY, i, MIN_CARD_NUMBER, i);

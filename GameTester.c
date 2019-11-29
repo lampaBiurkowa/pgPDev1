@@ -52,18 +52,6 @@ void playSmartGame(GameState *gameState)
 	}
 }
 
-int getCardsPerColorFromUser()
-{
-	const int MIN_CARDS_PER_COLOR = 1;
-	const int MAX_CARDS_PER_COLOR = DECK_MAX_SIZE / COLORS_COUNT;
-
-	printf("Podaj rozmiar talii (ilosc kart na kolor: %i - %i)\n", MIN_CARDS_PER_COLOR, MAX_CARDS_PER_COLOR);
-	int value;
-	while (scanf_s("%i", &value))
-		if (value >= MIN_CARDS_PER_COLOR && value <= MAX_CARDS_PER_COLOR)
-			return value;
-}
-
 WarOption getWarOptionFromUser()
 {
 	const char A_VARIANT_ID = 'A';
@@ -76,6 +64,18 @@ WarOption getWarOptionFromUser()
 			break;
 
 	return variant == A_VARIANT_ID ? WITHOUT_REFILL : WITH_REFILL;
+}
+
+int getCardsPerColorFromUser()
+{
+	const int MIN_CARDS_PER_COLOR = 1;
+	const int MAX_CARDS_PER_COLOR = DECK_MAX_SIZE / COLORS_COUNT;
+
+	printf("Podaj rozmiar talii (ilosc kart na kolor: %i - %i)\n", MIN_CARDS_PER_COLOR, MAX_CARDS_PER_COLOR);
+	int value;
+	while (scanf_s("%i", &value))
+		if (value >= MIN_CARDS_PER_COLOR && value <= MAX_CARDS_PER_COLOR)
+			return value;
 }
 
 void Demonstrate()
@@ -98,7 +98,7 @@ void assignCardsIfNotPreassigned(GameState *gameState, int player1Rank, int minC
 	int rankNotToSmall = player1Rank >= GetMinRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing);
 	int rankNotToBig = player1Rank <= GetMaxRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing);
 	if (rankNotToSmall && rankNotToBig)
-		GetCardsForRank(gameState, player1Rank);
+		GetCardsForRank(gameState, player1Rank, minCardNumberPointing);
 	else
 		GiveCards(gameState);
 }
