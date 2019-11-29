@@ -11,3 +11,4 @@ void PrintFirstPartWarWithBigRefillTurnData(GameState *gameState, PlayerData *he
 void PrintSecondPartWarWithBigRefillTurnData(GameState *gameState, PlayerData *helpingPlayer);
 void PrintWarCausingTurnData(GameState *gameState);
 void PrintStandardTurnData(GameState *gameState);
+void PrintVictoryData(GameState *gameState);

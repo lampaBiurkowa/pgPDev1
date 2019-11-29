@@ -205,6 +205,15 @@ int performWarOptionWithRefillIfPossible(GameState *gameState)
 {
 	if (gameState -> Player1Data.HandCards.CardsCount < 2 || gameState -> Player2Data.HandCards.CardsCount < 2)
 	{
+		if (gameState -> Player1Data.HandCards.CardsCount == 1 && gameState -> Player2Data.HandCards.CardsCount < 3)
+			return FALSE;
+		if (gameState -> Player1Data.HandCards.CardsCount == 0 && gameState -> Player2Data.HandCards.CardsCount < 4)
+			return FALSE;
+		if (gameState -> Player2Data.HandCards.CardsCount == 1 && gameState -> Player1Data.HandCards.CardsCount < 3)
+			return FALSE;
+		if (gameState -> Player2Data.HandCards.CardsCount == 0 && gameState -> Player1Data.HandCards.CardsCount < 4)
+			return FALSE;
+
 		if (gameState -> Player1Data.HandCards.CardsCount < 2 && !gameState -> Player1Data.UsedEnemyCardsInWar)
 			buildStackWithHelp(&gameState -> Player2Data, &gameState -> Player1Data, gameState);
 		else if (gameState -> Player2Data.HandCards.CardsCount < 2 && !gameState -> Player2Data.UsedEnemyCardsInWar)

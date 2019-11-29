@@ -1,5 +1,6 @@
 #include "GameTester.h"
 #include "CardsDeliverer.h"
+#include "GameDataPrinter.h"
 #include "Rank.h"
 
 void InitTestData(TestData *testData, int repeat)
@@ -120,6 +121,9 @@ StatsHandler RunTest(TestData *testData)
 			statsHandler.Player1VictoriesCount++;
 		else if (testData -> GameState.Winner == &testData -> GameState.Player2Data)
 			statsHandler.Player2VictoriesCount++;
+
+		if (testData -> GameState.PrintResults)
+			PrintVictoryData(&testData -> GameState);
 
 		statsHandler.TurnsTotal += testData -> GameState.TurnsCount;
 		statsHandler.GamesPlayedCount++;

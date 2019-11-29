@@ -101,3 +101,11 @@ void PrintSecondPartWarWithBigRefillTurnData(GameState *gameState, PlayerData *h
 	printf("Gracz %i zagrywa dla gracza %i: %i %s, ", helpingPlayerNumber, helpingPlayerNumber, firstCard.Number, GetCardSuitName(firstCard.Color));
 	printf("Gracz %i zagrywa dla gracza %i: %i %s\n", helpingPlayerNumber, helpingPlayerNumber, secondCard.Number, GetCardSuitName(secondCard.Color));
 }
+
+void PrintVictoryData(GameState *gameState)
+{
+	if (gameState -> Winner == &gameState -> Player1Data)
+		printf("WYGRAL GRACZ 1!!!!!");
+	else
+		printf("WYGRAL GRACZ 2!!!!!");
+}
