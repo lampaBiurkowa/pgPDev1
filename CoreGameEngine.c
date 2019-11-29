@@ -40,22 +40,6 @@ void handleVictory(GameState *gameState)
 		gameState -> Winner = &gameState -> Player1Data;
 }
 
-void printTurnData(GameState *gameState)
-{
-	printf("\n==========Ruch nr %i ===========\n", gameState -> TurnsCount);
-	printf("Karty w rece Gracza 1 (od pierwszej karty):\n");
-	PrintCardsQueue(&gameState -> Player1Data.HandCards);
-	printf("\nKarty w rece Gracza 2 (od pierwszej karty):\n");
-	PrintCardsQueue(&gameState -> Player2Data.HandCards);
-
-	Card player1CurrentCard = gameState -> Player1Data.StackCards.FirstCard -> value;
-	printf("Gracz 1 zagrywa: %i %s, ", player1CurrentCard.Number, GetCardSuitName(player1CurrentCard.Color));
-	Card player2CurrentCard = gameState -> Player2Data.StackCards.FirstCard -> value;
-	printf("Gracz 2 zagrywa: %i %s\n", player2CurrentCard.Number, GetCardSuitName(player2CurrentCard.Color));
-	if (player1CurrentCard.Number == player2CurrentCard.Number)
-		printf("*** W O J N A ***\n");
-}
-
 void HandleComparingCards(GameState *gameState)
 {
 	if (gameState -> Winner != NULL)
@@ -65,7 +49,7 @@ void HandleComparingCards(GameState *gameState)
 	int player2CardPower = gameState -> Player2Data.StackCards.FirstCard -> value.Number;
 
 	if (gameState -> PrintResults)
-		printTurnData(gameState);
+		PrintStandardTurnData(gameState);
 
 	if (player1CardPower > player2CardPower)
 		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data, gameState -> GameRules);
@@ -155,7 +139,7 @@ void AppendStacksInWar(GameState *gameState)
 		gameState -> TurnsCount++;
 
 		if (gameState -> PrintResults && i != CARDS_TAKING_PART_IN_WAR - 1) // prevents from duplicating turn data info for user
-			printTurnData(gameState);
+			PrintWarCausingTurnData(gameState);
 	}
 }
 
@@ -179,26 +163,41 @@ void buildStackWithHelp(PlayerData *helpingPlayer, PlayerData *playerNeedingHelp
 {
 	printf("REFILL\n\n\n\n\n");
 	int playerNeedingHelpCardsCountBeforeWar = playerNeedingHelp -> HandCards.CardsCount;
-	for (int i = 0; i < playerNeedingHelpCardsCountBeforeWar; i++)
+	if (playerNeedingHelpCardsCountBeforeWar == 1)
 	{
 		AddFirstCardToStack(playerNeedingHelp);
 		AddFirstCardToStack(helpingPlayer);
 		gameState -> TurnsCount++;
 
 		if (gameState -> PrintResults)
-			printTurnData(gameState);
-	}
+			PrintStandardTurnData(gameState);
 
-	for (int i = 0; i < CARDS_TAKING_PART_IN_WAR - playerNeedingHelpCardsCountBeforeWar; i++)
+		gameState -> TurnsCount++;
+
+		if (gameState -> PrintResults)
+			PrintWarWithSmallRefillTurnData(gameState, helpingPlayer);
+
 		addCardToStackWithHelp(helpingPlayer, playerNeedingHelp);
-
-	for (int i = 0; i < CARDS_TAKING_PART_IN_WAR - playerNeedingHelpCardsCountBeforeWar; i++)
 		AddFirstCardToStack(helpingPlayer);
+	}
+	else
+	{
+		gameState -> TurnsCount++;
 
-	//TODO turnsCount
+		if (gameState -> PrintResults)
+			PrintFirstPartWarWithBigRefillTurnData(gameState, helpingPlayer);
 
-	if (gameState -> PrintResults)
-		printTurnData(gameState);
+		for (int i = 0; i < CARDS_TAKING_PART_IN_WAR; i++)
+			addCardToStackWithHelp(helpingPlayer, playerNeedingHelp);
+
+		gameState -> TurnsCount++;
+
+		if (gameState -> PrintResults)
+			PrintSecondPartWarWithBigRefillTurnData(gameState, helpingPlayer);
+
+		for (int i = 0; i < CARDS_TAKING_PART_IN_WAR; i++)
+			AddFirstCardToStack(helpingPlayer);
+	}
 
 	playerNeedingHelp -> UsedEnemyCardsInWar = TRUE;
 }
@@ -213,8 +212,6 @@ int performWarOptionWithRefillIfPossible(GameState *gameState)
 			buildStackWithHelp(&gameState -> Player1Data, &gameState -> Player2Data, gameState);
 		else
 			return FALSE;
-
-		gameState -> TurnsCount++;
 	}
 	else
 		AppendStacksInWar(gameState);
