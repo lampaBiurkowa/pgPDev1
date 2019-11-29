@@ -126,7 +126,7 @@ int main()
 		printf("3 - zademonstrowac zwykla wojne\n");
 		printf("4 - pokazac wyniki problemu 1 gry w madra wojne\n");
 		printf("5 - pokazac wyniki problemu 2 gry w madra wojne\n");
-		printf("6 - zagrac z komputerem w zwykla wojne\n");
+		printf("6 - zagrac z komputerem w madra wojne\n");
 		printf("7 - pokazac wyniki strategii gry w madra wojne na dodatkowe punkty\n");
 		printf("8 - pokazac wyniki gier z plikow\n");
 
