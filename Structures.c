@@ -110,7 +110,7 @@ const char *GetCardSuitName(CardColor color)
 	case PIK:
 		return "PIK";
 	case TREFL:
-		return "KIER";
+		return "TREFL";
 	default:
 		return "???";
 	}

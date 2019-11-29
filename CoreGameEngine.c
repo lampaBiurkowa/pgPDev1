@@ -161,7 +161,6 @@ void addCardToStackWithHelp(PlayerData *helpingPlayer, PlayerData *playerNeeding
 
 void buildStackWithHelp(PlayerData *helpingPlayer, PlayerData *playerNeedingHelp, GameState *gameState)
 {
-	printf("REFILL\n\n\n\n\n");
 	int playerNeedingHelpCardsCountBeforeWar = playerNeedingHelp -> HandCards.CardsCount;
 	if (playerNeedingHelpCardsCountBeforeWar == 1)
 	{
