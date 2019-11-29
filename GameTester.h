@@ -15,9 +15,10 @@ typedef struct TestData
 {
 	GameState GameState;
 	int Player1Rank;
-	int Player2Rank; //TODO potrzebne?
+	int RankMinCardPointingNumber;
 	Strategy Player1Strategy;
 	Strategy Player2Strategy;
+	int RandomSeed;
 	int Repeat;
 } TestData;
 

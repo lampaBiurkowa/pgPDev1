@@ -2,29 +2,29 @@
 #include "Structures.h"
 #include "CardsDeliverer.h"
 
-int GetCardRank(int cardNumber)
+int GetCardRank(int cardNumber, int minCardNumberPointing)
 {
-	if (cardNumber < MIN_CARD_NUMBER_POINTING)
+	if (cardNumber < minCardNumberPointing)
 		return 0;
 
-	return cardNumber - MIN_CARD_NUMBER_POINTING + 1;
+	return cardNumber - minCardNumberPointing + 1;
 }
 
-int GetPlayerRank(PlayerData *player)
+int GetPlayerRank(PlayerData *player, int minCardNumberPointing)
 {
 	int output = 0;
 	CardQueueItem *item = player -> HandCards.FirstCard;
 	if (item == NULL)
 		return output;
 
-	if (item -> value.Number >= MIN_CARD_NUMBER_POINTING)
-		output += item -> value.Number - MIN_CARD_NUMBER_POINTING + 1;
+	if (item -> value.Number >= minCardNumberPointing)
+		output += item -> value.Number - minCardNumberPointing + 1;
 
 	for (int i = 1; i < player -> HandCards.AllCards; i++)
 	{
 		item = item -> next;
-		if (item -> value.Number >= MIN_CARD_NUMBER_POINTING)
-			output += item -> value.Number - MIN_CARD_NUMBER_POINTING + 1;
+		if (item -> value.Number >= minCardNumberPointing)
+			output += item -> value.Number - minCardNumberPointing + 1;
 	}
 
 	return output;
@@ -41,14 +41,14 @@ int getCardNumberOccurrences(int numberConsidered, Card cardsDisabled[], int car
 	return occurences;
 }
 
-int GetMaxRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount)
+int GetMaxRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount, int minCardNumberPointing)
 {
 	int maxRankReachable = 0;
 	int cardsUsedCount = 0;
 	int currentNumber = MAX_CARD_NUMBER;
-	while (currentNumber >= MIN_CARD_NUMBER_POINTING && cardsUsedCount < cardsAmount)
+	while (currentNumber >= minCardNumberPointing && cardsUsedCount < cardsAmount)
 	{
-		int currentPoint = currentNumber - MIN_CARD_NUMBER_POINTING + 1;
+		int currentPoint = currentNumber - minCardNumberPointing + 1;
 		int occurences = getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount);
 		maxRankReachable += occurences * currentPoint;
 		cardsUsedCount += occurences;
@@ -58,14 +58,14 @@ int GetMaxRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabled
 	return maxRankReachable;
 }
 
-int GetMinRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount)
+int GetMinRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount, int minCardNumberPointing)
 {
 	int minRankReachable = 0;
 	int cardsUsedCount = 0;
 	int currentNumber = MIN_CARD_NUMBER;
 	while (currentNumber <= MAX_CARD_NUMBER && cardsUsedCount < cardsAmount)
 	{
-		int currentPoint = GetCardRank(currentNumber);
+		int currentPoint = GetCardRank(currentNumber, minCardNumberPointing);
 		int occurences = getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount);
 		minRankReachable += occurences * currentPoint;
 		cardsUsedCount += occurences;
@@ -75,14 +75,14 @@ int GetMinRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabled
 	return minRankReachable;
 }
 
-int GetMaxRankForDeckSize(int cardsPerColor)
+int GetMaxRankForDeckSize(int cardsPerColor, int minCardNumberPointing)
 {
 	Card *cards = malloc(0);
-	return GetMaxRankReachable((cardsPerColor * COLORS_COUNT) / 2, cards, 0);
+	return GetMaxRankReachable((cardsPerColor * COLORS_COUNT) / 2, cards, 0, minCardNumberPointing);
 }
 
-int GetMinRankForDeckSize(int cardsPerColor)
+int GetMinRankForDeckSize(int cardsPerColor, int minCardNumberPointing)
 {
 	Card *cards = malloc(0);
-	return GetMinRankReachable((cardsPerColor * COLORS_COUNT) / 2, cards, 0);
+	return GetMinRankReachable((cardsPerColor * COLORS_COUNT) / 2, cards, 0, minCardNumberPointing);
 }
