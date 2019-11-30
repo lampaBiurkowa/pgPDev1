@@ -13,7 +13,7 @@ void generateTestFiles(int cardsPerColor)
 
 void printMenu()
 {
-	printf("Wybierz:\n");
+	printf("\nWybierz:\n");
 	printf("1 - pokazac wyniki problemu 1 gry w zwykla wojne\n");
 	printf("2 - pokazac wyniki problemu 2 gry w zwykla wojne\n");
 	printf("3 - zademonstrowac zwykla wojne\n");
@@ -61,8 +61,8 @@ int main()
 			default:
 				printf("Prosze wpisac poprawna cyfre");
 			}
+			printMenu();
 		}
-		printMenu();
 	}
 
 	return 0;

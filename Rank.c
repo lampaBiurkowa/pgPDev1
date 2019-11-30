@@ -20,9 +20,9 @@ int GetPlayerRank(PlayerData *player, int minCardNumberPointing)
 	if (item -> value.Number >= minCardNumberPointing)
 		output += item -> value.Number - minCardNumberPointing + 1;
 
-	for (int i = 1; i < player -> HandCards.AllCards; i++)
+	for (int i = 1; i < player -> HandCards.CardsCount; i++)
 	{
-		item = item -> next;
+		item = item -> previous;
 		if (item -> value.Number >= minCardNumberPointing)
 			output += item -> value.Number - minCardNumberPointing + 1;
 	}
@@ -41,15 +41,24 @@ int getCardNumberOccurrences(int numberConsidered, Card cardsDisabled[], int car
 	return occurences;
 }
 
+int IsRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount, int rank, int minCardNumberPointing)
+{
+	if (GetMinRankReachable(cardsAmount, cardsDisabled, cardsDisabledCount, minCardNumberPointing) > rank)
+		return FALSE;
+	if (GetMaxRankReachable(cardsAmount, cardsDisabled, cardsDisabledCount, minCardNumberPointing) > rank)
+		return TRUE;
+}
+
 int GetMaxRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount, int minCardNumberPointing)
 {
-	int maxRankReachable = 0;
-	int cardsUsedCount = 0;
-	int currentNumber = MAX_CARD_NUMBER;
+	int maxRankReachable = 0, cardsUsedCount = 0, currentNumber = MAX_CARD_NUMBER;
 	while (currentNumber >= minCardNumberPointing && cardsUsedCount < cardsAmount)
 	{
 		int currentPoint = currentNumber - minCardNumberPointing + 1;
 		int occurences = getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount);
+		if (occurences > cardsAmount - cardsUsedCount)
+			occurences = cardsAmount - cardsUsedCount;
+
 		maxRankReachable += occurences * currentPoint;
 		cardsUsedCount += occurences;
 		currentNumber--;
@@ -67,6 +76,9 @@ int GetMinRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabled
 	{
 		int currentPoint = GetCardRank(currentNumber, minCardNumberPointing);
 		int occurences = getCardNumberOccurrences(currentNumber, cardsDisabled, cardsDisabledCount);
+		if (occurences > cardsAmount - cardsUsedCount)
+			occurences = cardsAmount - cardsUsedCount;
+
 		minRankReachable += occurences * currentPoint;
 		cardsUsedCount += occurences;
 		currentNumber++;

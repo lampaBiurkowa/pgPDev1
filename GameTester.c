@@ -99,7 +99,13 @@ void assignCardsIfNotPreassigned(GameState *gameState, int player1Rank, int minC
 	int rankNotToSmall = player1Rank >= GetMinRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing);
 	int rankNotToBig = player1Rank <= GetMaxRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing);
 	if (rankNotToSmall && rankNotToBig)
+	{
 		GetCardsForRank(gameState, player1Rank, minCardNumberPointing);
+		printf("dsafdsaf %i %i ",player1Rank, GetPlayerRank(&gameState -> Player1Data, minCardNumberPointing));
+		printf("dsafdsaf %i\n", GetPlayerRank(&gameState -> Player2Data, minCardNumberPointing));
+		/*PrintCardsQueue(&gameState -> Player1Data.HandCards);
+		PrintCardsQueue(&gameState -> Player2Data.HandCards);*/
+	}
 	else
 		GiveCards(gameState);
 }

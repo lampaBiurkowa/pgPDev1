@@ -76,6 +76,7 @@ void GiveCards(GameState *gameState)
 int wasDecisionValid(int cardsToGiveCount, Card cardsUsed[], int cardsGivenCount, int rank, int minCardNumberPointing, int currentRank)
 {
 	int missingRank = rank - currentRank;
+
 	int decisionValid = TRUE;
 	if (GetMaxRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing) < missingRank)
 		decisionValid = FALSE;
@@ -102,7 +103,7 @@ void generateCardsForRank(int cardsPerColors, int rank, int minCardNumberPointin
 		cardsGivenCount++;
 		currentRank += GetCardRank(card.Number, minCardNumberPointing);
 
-		int missingCardsCount = cardsToGiveCount - cardsGivenCount + 1;
+		int missingCardsCount = cardsToGiveCount - cardsGivenCount;
 		if (!wasDecisionValid(missingCardsCount, arrayToFill, cardsGivenCount, rank, minCardNumberPointing, currentRank))
 		{
 			cardsGivenCount--;
