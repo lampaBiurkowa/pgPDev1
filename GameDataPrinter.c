@@ -20,7 +20,7 @@ void PrintCardsQueue(CardsQueue *queue)
 
 void printGenericTurnData(GameState *gameState)
 {
-	printf("\n========== Ruch nr %i ===========\n\n", gameState -> TurnsCount);
+	printf("\n     ========== Ruch nr %i ===========\n\n", gameState -> TurnsCount);
 	printf("Karty w rece Gracza 1 (od pierwszej karty):\n");
 	PrintCardsQueue(&gameState -> Player1Data.HandCards);
 	printf("\nKarty w rece Gracza 2 (od pierwszej karty):\n");
@@ -46,7 +46,6 @@ void printWarStartedIndicator()
 	printf("\n             *** W O J N A ***\n");
 }
 
-
 void PrintWarCausingTurnData(GameState *gameState)
 {
 	printGenericTurnData(gameState);
@@ -54,58 +53,62 @@ void PrintWarCausingTurnData(GameState *gameState)
 	printWarStartedIndicator();
 }
 
+int getPlayerNumber(GameState *gameState, PlayerData *helpingPlayer)
+{
+	if (helpingPlayer == &gameState -> Player1Data)
+		return 1;
+
+	return 2;
+}
+
+int getOppositePlayerNumber(int basePlayerNumber)
+{
+	return 2 - (basePlayerNumber + 1) % 2; //2 - parzystosc numeru przeciwnika
+}
+
+void printRefillTurnData(GameState *gameState, PlayerData *helpingPlayer, int firstGiftedNumber, int secondGiftedNumber)
+{
+	int helpingPlayerNumber = getPlayerNumber(gameState, helpingPlayer);
+	Card firstCard = helpingPlayer -> HandCards.FirstCard -> value;
+	Card secondCard = helpingPlayer -> HandCards.FirstCard -> previous -> value;
+	printf("Gracz %i zagrywa dla Gracza %i: %i %s, ", helpingPlayerNumber, firstGiftedNumber, firstCard.Number, GetCardSuitName(firstCard.Color));
+	printf("Gracz %i zagrywa dla Gracza %i: %i %s\n", helpingPlayerNumber, secondGiftedNumber, secondCard.Number, GetCardSuitName(secondCard.Color));
+
+}
+
 void PrintWarWithSmallRefillTurnData(GameState *gameState, PlayerData *helpingPlayer)
 {
 	printGenericTurnData(gameState);
 
-	int helpingPlayerNumber;
-	if (helpingPlayer == &gameState -> Player1Data)
-		helpingPlayerNumber = 1;
-	else
-		helpingPlayerNumber = 2;
-
-	Card firstCard = helpingPlayer -> HandCards.FirstCard -> value;
-	Card secondCard = helpingPlayer -> HandCards.FirstCard -> previous -> value;
-	printf("Gracz %i zagrywa dla Gracza %i: %i %s, ", helpingPlayerNumber, (helpingPlayerNumber + 1) % 2, firstCard.Number, GetCardSuitName(firstCard.Color));
-	printf("Gracz %i zagrywa dla Gracza %i: %i %s\n", helpingPlayerNumber, helpingPlayerNumber, secondCard.Number, GetCardSuitName(secondCard.Color));
+	int helpingPlayerNumber = getPlayerNumber(gameState, helpingPlayer);
+	printRefillTurnData(gameState, helpingPlayer, getOppositePlayerNumber(helpingPlayerNumber), helpingPlayerNumber);
 }
 
 void PrintFirstPartWarWithBigRefillTurnData(GameState *gameState, PlayerData *helpingPlayer)
 {
 	printGenericTurnData(gameState);
 
-	int helpingPlayerNumber;
-	if (helpingPlayer == &gameState -> Player1Data)
-		helpingPlayerNumber = 1;
-	else
-		helpingPlayerNumber = 2;
-
-	Card firstCard = helpingPlayer -> HandCards.FirstCard -> value;
-	Card secondCard = helpingPlayer -> HandCards.FirstCard -> previous -> value;
-	printf("Gracz %i zagrywa dla Gracza %i: %i %s, ", helpingPlayerNumber, (helpingPlayerNumber + 1) % 2, firstCard.Number, GetCardSuitName(firstCard.Color));
-	printf("Gracz %i zagrywa dla Gracza %i: %i %s\n", helpingPlayerNumber, (helpingPlayerNumber + 1) % 2, secondCard.Number, GetCardSuitName(secondCard.Color));
+	int helpingPlayerNumber = getPlayerNumber(gameState, helpingPlayer);
+	printRefillTurnData(gameState, helpingPlayer, getOppositePlayerNumber(helpingPlayerNumber), getOppositePlayerNumber(helpingPlayerNumber));
 }
 
 void PrintSecondPartWarWithBigRefillTurnData(GameState *gameState, PlayerData *helpingPlayer)
 {
 	printGenericTurnData(gameState);
 
-	int helpingPlayerNumber;
-	if (helpingPlayer == &gameState -> Player1Data)
-		helpingPlayerNumber = 1;
-	else
-		helpingPlayerNumber = 2;
-
-	Card firstCard = helpingPlayer -> HandCards.FirstCard -> value;
-	Card secondCard = helpingPlayer -> HandCards.FirstCard -> previous -> value;
-	printf("Gracz %i zagrywa dla gracza %i: %i %s, ", helpingPlayerNumber, helpingPlayerNumber, firstCard.Number, GetCardSuitName(firstCard.Color));
-	printf("Gracz %i zagrywa dla gracza %i: %i %s\n", helpingPlayerNumber, helpingPlayerNumber, secondCard.Number, GetCardSuitName(secondCard.Color));
+	int helpingPlayerNumber = getPlayerNumber(gameState, helpingPlayer);
+	printRefillTurnData(gameState, helpingPlayer, helpingPlayerNumber, helpingPlayerNumber);
 }
 
-void PrintVictoryData(GameState *gameState)
+void PrintVictoryInfo(GameState *gameState)
 {
 	if (gameState -> Winner == &gameState -> Player1Data)
-		printf("WYGRAL GRACZ 1!!!!!");
+		printf("\nWYGRAL GRACZ 1!!!!!\n");
 	else
-		printf("WYGRAL GRACZ 2!!!!!");
+		printf("\nWYGRAL GRACZ 2!!!!!\n");
+}
+
+void PrintWarWonInfo(GameState *gameState, PlayerData *winner)
+{
+	printf("\nGracz %i wygrywa wojne!\n", getPlayerNumber(gameState, winner));
 }

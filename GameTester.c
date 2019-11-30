@@ -123,7 +123,7 @@ StatsHandler RunTest(TestData *testData)
 			statsHandler.Player2VictoriesCount++;
 
 		if (testData -> GameState.PrintResults)
-			PrintVictoryData(&testData -> GameState);
+			PrintVictoryInfo(&testData -> GameState);
 
 		statsHandler.TurnsTotal += testData -> GameState.TurnsCount;
 		statsHandler.GamesPlayedCount++;

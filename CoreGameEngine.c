@@ -10,9 +10,12 @@ void getShuffledStackCards(CardsQueue *allStackCards, PlayerData *player1, Playe
 	ShuffleCards(allStackCards);
 }
 
-void handleBattleWon(PlayerData *winner, PlayerData *looser, GameRules gameRules)
+void handleBattleWon(PlayerData *winner, PlayerData *looser, GameState *gameState)
 {
-	if (gameRules == STANDARD)
+	if (gameState -> PrintResults && looser -> StackCards.CardsCount > 1)
+		PrintWarWonInfo(gameState, winner);
+
+	if (gameState -> GameRules == STANDARD)
 	{
 		MoveQueueToQueue(&winner -> HandCards, &winner -> StackCards);
 		MoveQueueToQueue(&winner -> HandCards, &looser -> StackCards);
@@ -32,6 +35,17 @@ void AddFirstCardToStack(PlayerData *player)
 	PushFrontCard(&player -> StackCards, card);
 }
 
+void handlePrintingTurnData(GameState *gameState)
+{
+	int player1CardPower = gameState -> Player1Data.StackCards.FirstCard -> value.Number;
+	int player2CardPower = gameState -> Player2Data.StackCards.FirstCard -> value.Number;
+
+	if (player1CardPower == player2CardPower && gameState -> Player1Data.StackCards.CardsCount % 2 == 1)
+		PrintWarCausingTurnData(gameState);
+	else
+		PrintStandardTurnData(gameState);
+}
+
 void handleVictory(GameState *gameState)
 {
 	if (gameState -> Player1Data.HandCards.CardsCount == 0)
@@ -49,12 +63,12 @@ void HandleComparingCards(GameState *gameState)
 	int player2CardPower = gameState -> Player2Data.StackCards.FirstCard -> value.Number;
 
 	if (gameState -> PrintResults)
-		PrintStandardTurnData(gameState);
+		handlePrintingTurnData(gameState);
 
 	if (player1CardPower > player2CardPower)
-		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data, gameState -> GameRules);
+		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data, gameState);
 	else if (player1CardPower < player2CardPower)
-		handleBattleWon(&gameState -> Player2Data, &gameState -> Player1Data, gameState -> GameRules);
+		handleBattleWon(&gameState -> Player2Data, &gameState -> Player1Data, gameState);
 	else
 		War(gameState);
 
@@ -139,7 +153,7 @@ void AppendStacksInWar(GameState *gameState)
 		gameState -> TurnsCount++;
 
 		if (gameState -> PrintResults && i != CARDS_TAKING_PART_IN_WAR - 1) // prevents from duplicating turn data info for user
-			PrintWarCausingTurnData(gameState);
+			PrintStandardTurnData(gameState);
 	}
 }
 
