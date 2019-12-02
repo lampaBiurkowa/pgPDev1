@@ -28,9 +28,12 @@ Card PopFrontCard(CardsQueue *queue)
 {
 	Card value = queue -> FirstCard -> value;
 	queue -> FirstCard = queue -> FirstCard -> previous;
+	
+	if (queue -> CardsCount == 0)
+		queue -> LastCard = NULL;
+
 	queue -> QueueItemsAllocations[value.Id] = 0;
 	queue -> CardsCount--;
-
 	return value;
 }
 
@@ -74,12 +77,7 @@ void ClearCards(CardsQueue *queue)
 {
 	CardQueueItem *currentItem = queue -> FirstCard;
 	for (int i = 0; i < queue -> CardsCount; i++)
-	{
 		queue -> QueueItemsAllocations[i] = 0;
-		CardQueueItem *nextItem = currentItem -> next;
-		free(currentItem);
-		currentItem = nextItem;
-	}
 
 	InitCardsQueue(queue);
 }

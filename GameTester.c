@@ -101,9 +101,9 @@ void assignCardsIfNotPreassigned(GameState *gameState, int player1Rank, int minC
 	if (rankNotToSmall && rankNotToBig)
 	{
 		GetCardsForRank(gameState, player1Rank, minCardNumberPointing);
-		printf("dsafdsaf %i %i ",player1Rank, GetPlayerRank(&gameState -> Player1Data, minCardNumberPointing));
+		/*printf("dsafdsaf %i %i ",player1Rank, GetPlayerRank(&gameState -> Player1Data, minCardNumberPointing));
 		printf("dsafdsaf %i\n", GetPlayerRank(&gameState -> Player2Data, minCardNumberPointing));
-		/*PrintCardsQueue(&gameState -> Player1Data.HandCards);
+		PrintCardsQueue(&gameState -> Player1Data.HandCards);
 		PrintCardsQueue(&gameState -> Player2Data.HandCards);*/
 	}
 	else

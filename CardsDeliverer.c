@@ -77,15 +77,94 @@ int wasDecisionValid(int cardsToGiveCount, Card cardsUsed[], int cardsGivenCount
 {
 	int missingRank = rank - currentRank;
 
-	int decisionValid = TRUE;
+	//printf("MAX: %i < %i\n", GetMaxRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing), missingRank);
 	if (GetMaxRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing) < missingRank)
-		decisionValid = FALSE;
-	else if (GetMinRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing) > missingRank)
-		decisionValid = FALSE;
-	else if (currentRank > rank)
-		decisionValid = FALSE;
+		return FALSE;
+	//printf("MIN: %i > %i\n", GetMinRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing), missingRank);
+	if (GetMinRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing) > missingRank)
+		return FALSE;
+	if (currentRank > rank)
+		return FALSE;
 
-	return decisionValid;
+	return TRUE;
+}
+
+int getMinRank(int minCardPointingNumber, Card cardsUnassigned[], int mask[], int size)
+{
+	int minIndex = -1;
+	int min = MAX_CARD_NUMBER - minCardPointingNumber + 1;
+	for (int i = 0; i < size; i++)
+		if (GetCardRank(cardsUnassigned[i].Number, minCardPointingNumber) < min && mask[i] == FALSE)
+		{
+			min = GetCardRank(cardsUnassigned[i].Number, minCardPointingNumber);
+			minIndex = i;
+		}
+
+	mask[minIndex] = TRUE;
+	return min;
+}
+
+int ujea(int missingRank, int minCardPointingNumber, Card cardsUnassigned[], int size)
+{
+	if (missingRank < 0)
+		return FALSE;
+
+	int totalSum = 0;
+	for (int i = 0; i < size; i++)
+		totalSum += GetCardRank(cardsUnassigned[i].Number, minCardPointingNumber);
+
+	int *mask = (int *)malloc(sizeof(int) * size);
+	for (int i = 0; i < size; i++)
+		mask[i] = FALSE;
+
+	for (int i = 0; i < size; i++)
+	{
+		if (totalSum == missingRank)
+			return TRUE;
+		int z = getMinRank(minCardPointingNumber, cardsUnassigned, mask, size);
+		totalSum -= z;
+		printf("zbijam sume o:%i tera %i ma byc: %i \n", z, totalSum, missingRank);
+	}
+	
+	return FALSE;
+}
+
+void jea(int cardsPerColor, int rank, int minCardNumberPointing, Card arrayToFill[], unsigned int seed)
+{
+	srand(time(NULL) + seed);
+	Card *cardsUnassigned = (Card *)malloc(sizeof(Card) * cardsPerColor * COLORS_COUNT);
+	for (int i = 0; i < cardsPerColor; i++)
+		for (int j = 0; j < 4; j++)
+		{
+			cardsUnassigned[i * 4 + j].Number = MAX_CARD_NUMBER - cardsPerColor + 1 + i;
+			cardsUnassigned[i * 4 + j].Color = j;
+		}
+
+	int cardsGivenCount = 0, currentRank = 0, cardsToGiveCount = (cardsPerColor * COLORS_COUNT) / 2;
+	while (cardsGivenCount < cardsToGiveCount)
+	{
+		Card card = generateSingleRandomCard(cardsPerColor);
+		if (cardAlreadyGiven(&card, arrayToFill, cardsGivenCount))
+			continue;
+
+		arrayToFill[cardsGivenCount] = card;
+		cardsGivenCount++;
+		currentRank += GetCardRank(card.Number, minCardNumberPointing);
+		int missingCardsCount = cardsToGiveCount - cardsGivenCount;
+		printf("Wybieram %i %i - ", card.Number, card.Color);
+		if (!ujea(rank - currentRank, minCardNumberPointing, cardsUnassigned, cardsPerColor * COLORS_COUNT))
+		{
+			printf("zla decyzja\n");
+			for (int i = 0; i < cardsGivenCount; i++)
+				printf(" %i", arrayToFill[i].Number);
+			printf("\n");
+			cardsGivenCount--;
+			currentRank -= GetCardRank(card.Number, minCardNumberPointing);
+		}
+		else
+			printf("dobra decyzja\n");
+	}
+
 }
 
 void generateCardsForRank(int cardsPerColors, int rank, int minCardNumberPointing, Card arrayToFill[], unsigned int seed)
@@ -102,8 +181,8 @@ void generateCardsForRank(int cardsPerColors, int rank, int minCardNumberPointin
 		arrayToFill[cardsGivenCount] = card;
 		cardsGivenCount++;
 		currentRank += GetCardRank(card.Number, minCardNumberPointing);
-
 		int missingCardsCount = cardsToGiveCount - cardsGivenCount;
+		//printf("nie wyczymie given: %i misisng: %i rank: %i\n", cardsGivenCount, currentRank - rank, rank);
 		if (!wasDecisionValid(missingCardsCount, arrayToFill, cardsGivenCount, rank, minCardNumberPointing, currentRank))
 		{
 			cardsGivenCount--;
@@ -178,9 +257,19 @@ void GetCardsForRank(GameState *gameState, int rank, int minCardNumberPointing)
 	else if (rank > GetMaxRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing))
 		rank = GetMaxRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing);
 
-	generateCardsForRank(gameState -> CardsPerColor, rank, minCardNumberPointing, cards, gameState -> RandomSeed);
-	assignRemainingCards(gameState -> CardsPerColor, cards);
-	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
+	int x = 0;
+	while (GetPlayerRank(&gameState -> Player1Data, minCardNumberPointing) != rank)
+	{
+		ClearCards(&gameState -> Player1Data.HandCards);
+		ClearCards(&gameState -> Player2Data.HandCards);
+		cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
+		jea(gameState -> CardsPerColor, rank, minCardNumberPointing, cards, gameState -> RandomSeed + x++);
+
+		//printf("?????????????4\n");
+		assignRemainingCards(gameState -> CardsPerColor, cards);
+		assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
+		//printf("a\n %i == %i", GetPlayerRank(&gameState -> Player1Data, minCardNumberPointing), rank);
+	}
 	ShuffleCards(&gameState -> Player1Data.HandCards);
 	ShuffleCards(&gameState -> Player2Data.HandCards);
 }

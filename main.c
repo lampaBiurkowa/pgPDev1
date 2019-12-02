@@ -50,7 +50,7 @@ int main()
 				SmartGameProblem2();
 				break;
 			case 6:
-				ShowEntryScreen();
+				PlayWithComputer();
 				break;
 			case 7:
 				EfficentStrategy();

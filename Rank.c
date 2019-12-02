@@ -41,14 +41,6 @@ int getCardNumberOccurrences(int numberConsidered, Card cardsDisabled[], int car
 	return occurences;
 }
 
-int IsRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount, int rank, int minCardNumberPointing)
-{
-	if (GetMinRankReachable(cardsAmount, cardsDisabled, cardsDisabledCount, minCardNumberPointing) > rank)
-		return FALSE;
-	if (GetMaxRankReachable(cardsAmount, cardsDisabled, cardsDisabledCount, minCardNumberPointing) > rank)
-		return TRUE;
-}
-
 int GetMaxRankReachable(int cardsAmount, Card cardsDisabled[], int cardsDisabledCount, int minCardNumberPointing)
 {
 	int maxRankReachable = 0, cardsUsedCount = 0, currentNumber = MAX_CARD_NUMBER;

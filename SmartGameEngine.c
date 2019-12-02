@@ -29,28 +29,26 @@ Card smartSelectOffensively(CardsQueue *ownHandCards, CardsQueue *opponentStackC
 		SwapFrontTwoCards(ownHandCards);
 }
 
-int makeSwapInEfficentStrategy(PlayerData *efficentPlayer, PlayerData *opponent)
+int makeSwapInEfficentStrategy(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
 {
 	const int VERY_STRONG_CARD_MIN_NUMBER = 12;
 	const int STRONG_CARD_MIN_NUMBER = 10;
 	const int WEAK_CARD_MAX_NUMBER = 7;
 
-	Card firstCard = efficentPlayer -> HandCards.FirstCard -> value;
-	Card secondCard = efficentPlayer -> HandCards.FirstCard -> previous -> value;
-	if (efficentPlayer -> HandCards.CardsCount == 2)
+	Card firstCard = ownHandCards -> FirstCard -> value;
+	Card secondCard = ownHandCards -> FirstCard -> previous -> value;
+	if (ownHandCards -> CardsCount == 2)
 		return FALSE; //TODO to nie tak
-	Card thirdCard = efficentPlayer -> HandCards.FirstCard -> previous -> previous -> value;
-	Card opponentCard = opponent -> StackCards.FirstCard -> value;
+	Card thirdCard = ownHandCards -> FirstCard -> previous -> previous -> value;
+	Card opponentCard = opponentStackCards -> FirstCard -> value;
 
 	int *opponentVeryStrongCardsCount = (int *)malloc(sizeof(int) * (MAX_CARD_NUMBER - VERY_STRONG_CARD_MIN_NUMBER + 1));
 	for (int i = VERY_STRONG_CARD_MIN_NUMBER; i <= MAX_CARD_NUMBER; i++)
 	{
-		opponentVeryStrongCardsCount[i - VERY_STRONG_CARD_MIN_NUMBER] = GetCardNumberOccurrencesInQueue(&efficentPlayer -> HandCards, i);
+		opponentVeryStrongCardsCount[i - VERY_STRONG_CARD_MIN_NUMBER] = GetCardNumberOccurrencesInQueue(ownHandCards, i);
 		if (opponentCard.Number == i)
 			opponentVeryStrongCardsCount[i - VERY_STRONG_CARD_MIN_NUMBER]++;
 	}
-
-
 
 	if (firstCard.Number > opponentCard.Number && secondCard.Number > opponentCard.Number)
 	{
@@ -105,15 +103,14 @@ Card smartSelectByUser(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
 	CardQueueItem *firstCardItem = ownHandCards -> FirstCard;
 	Card firstCard = firstCardItem -> value;
 	Card secondCard = firstCardItem -> previous -> value;
-	Card thirdCard = firstCardItem -> previous -> previous -> value;
 	Card opponentCard = opponentStackCards -> FirstCard -> value;
-	printf("Twoj wybor!\n");
 	printf("Karta na szcycie stosu przeciwnika: |%i %s|\n", opponentCard.Number, GetCardSuitName(opponentCard.Id));
-	printf("Wybierz jedna z kart (podaj 1 lub 2): 1 - |%i %s|, 2 - |%i %s|:", firstCard.Number, GetCardSuitName(firstCard.Color), secondCard.Number, GetCardSuitName(secondCard.Color));
-	int choice = 2;//makeSwapInEfficentStrategy(firstCard, secondCard, thirdCard, opponentCard) + 1;
-	//scanf_s("%i", &choice);
-	printf("wybrano %i", choice);
-	_getch();
+	printf("> Wybierz jedna z kart (podaj 1 lub 2): 1 - |%i %s|, 2 - |%i %s|:", firstCard.Number, GetCardSuitName(firstCard.Color), secondCard.Number, GetCardSuitName(secondCard.Color));
+	//int choice = makeSwapInEfficentStrategy(ownHandCards, opponentStackCards) + 1;
+	int choice;
+	scanf_s("%i", &choice);
+	//printf("wybrano %i", choice);
+	//_getch();
 	if (choice == 2)
 		SwapFrontTwoCards(ownHandCards);
 }
