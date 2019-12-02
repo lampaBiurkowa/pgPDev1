@@ -1,34 +1,8 @@
 #include "CardsDeliverer.h"
-#include "GameDataPrinter.h"
 #include "SmartGameEngine.h"
 #include "UserInterface.h"
+#include "UserInterfaceDataPrinter.h"
 #include <time.h>
-
-void printChoiceData(CardQueueItem *usersCard,  int startingPlayerIndex)
-{
-	if (startingPlayerIndex == 1)
-		printf("Twoj wybor!\n");
-	else
-	{
-		printf("Karte wybiera przeciwnik, ");
-		if (usersCard == NULL)
-			printf("ty nie masz kart :)\n");
-		else
-			printf("ty zagrywasz |%i %s|\n", usersCard -> value.Number, GetCardSuitName(usersCard -> value.Color));
-	}
-}
-
-void printPreBattleData(GameState *gameState, int startingPlayerIndex)
-{
-	system("cls");
-
-	printf("Moje karty (od poczatku reki):\n");
-	PrintCardsQueue(&gameState -> Player1Data.HandCards);
-	printf("Kolejka: %i, ilosc moich kart w rece: %i, ilosc kart przeciwnika w rece: %i.\n\n", gameState -> TurnsCount, gameState -> Player1Data.HandCards.CardsCount, gameState -> Player2Data.HandCards.CardsCount);
-	printChoiceData(gameState -> Player1Data.HandCards.FirstCard, startingPlayerIndex);
-	printf("> Kliknij dowolny klawisz, aby kontynuowac...\n\n");
-	_getch();
-}
 
 void startGame(int startingCardNumber)
 {
@@ -37,6 +11,7 @@ void startGame(int startingCardNumber)
 	gameState.Player1Data.Strategy = USER;
 	gameState.Player2Data.Strategy = RANDOMLY;
 	InitGame(&gameState, WITHOUT_REFILL, SMART, cardsPerColor);
+	gameState.PrintUIData = TRUE;
 	GiveCards(&gameState);
 	int startingPlayerIndex = rand(time(NULL)) % 2;
 	PlayerData *startingPlayer;
@@ -47,7 +22,7 @@ void startGame(int startingCardNumber)
 		else
 			startingPlayer = &gameState.Player2Data;
 		
-		printPreBattleData(&gameState, startingPlayerIndex);
+		UIPrintPreBattleData(&gameState, startingPlayerIndex);
 		SmartBattle(&gameState, startingPlayer);
 
 		if (gameState.Winner == &gameState.Player1Data)
@@ -57,13 +32,6 @@ void startGame(int startingCardNumber)
 
 		startingPlayerIndex = (startingPlayerIndex + 1) % 2;
 	}
-}
-
-void printEntryText()
-{
-	system("cls");
-	printf("     === W o j n a ===\n");
-	printf("       gra karciana\n\n\n");
 }
 
 int playerWantsToPlay()
@@ -98,7 +66,7 @@ int getStartingCardNumber()
 
 void PlayWithComputer()
 {
-	printEntryText();
+	UIPrintGameEntryText();
 	printf("> Podaj X aby wyjsc, Z, aby rozpoczac\n");
 	if (!playerWantsToPlay())
 		return;

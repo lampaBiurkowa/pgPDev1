@@ -1,5 +1,6 @@
 #pragma once
 
+#define CARDS_TO_SHOW_PER_ROW (8)
 #define DECK_MAX_SIZE (52) // 52 = 4 talie * 13 kart
 #define COLORS_COUNT (4)
 #define NULL (0)

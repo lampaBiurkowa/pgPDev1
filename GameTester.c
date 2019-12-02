@@ -1,6 +1,5 @@
 #include "GameTester.h"
 #include "CardsDeliverer.h"
-#include "GameDataPrinter.h"
 #include "Rank.h"
 
 void InitTestData(TestData *testData, int repeat)

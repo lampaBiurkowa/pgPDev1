@@ -3,7 +3,7 @@
 
 Card generateSingleRandomCard(int cardsPerColors)
 {
-	int colorId = rand() % COLORS_COUNT;
+	int colorId = rand() % COLORS_COUNT; //TODO rand() dziala?
 	int cardNumber = rand() % cardsPerColors + YOUNGEST_CARD_NUMBER;
 	Card card;
 	card.Color = colorId;

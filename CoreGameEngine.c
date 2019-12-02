@@ -1,10 +1,11 @@
 #include "CardsDeliverer.h"
 #include "CoreGameEngine.h"
-#include "GameDataPrinter.h"
+#include "GameDemonstrationDataPrinter.h"
+#include "UserInterfaceDataPrinter.h"
 #include "InputHandler.h"
 
 void getShuffledStackCards(CardsQueue *allStackCards, PlayerData *player1, PlayerData *player2)
-{	
+{
 	MoveQueueToQueue(allStackCards, &player1 -> StackCards);
 	MoveQueueToQueue(allStackCards, &player2 -> StackCards);
 	ShuffleCards(allStackCards);
@@ -46,6 +47,21 @@ void handlePrintingTurnData(GameState *gameState)
 		PrintStandardTurnData(gameState);
 }
 
+void handlePrintingUIData(GameState *gameState)
+{
+	Card userCard = gameState -> Player1Data.StackCards.FirstCard -> value;
+	Card opponentCard = gameState -> Player2Data.StackCards.FirstCard -> value;
+
+	if (userCard.Number == opponentCard.Number)
+		UIPrintWarCausingTurnInfo(&userCard, &opponentCard);
+	else
+		UIPrintStandardTurnInfo(&userCard, &opponentCard);
+	
+	printf("> Kliknij dowolny klawisz, aby kontynuowac...\n");
+	
+	_getch();
+}
+
 void handleVictory(GameState *gameState)
 {
 	if (gameState -> Player1Data.HandCards.CardsCount == 0)
@@ -64,6 +80,8 @@ void HandleComparingCards(GameState *gameState)
 
 	if (gameState -> PrintResults)
 		handlePrintingTurnData(gameState);
+	if (gameState -> PrintUIData)
+		handlePrintingUIData(gameState);
 
 	if (player1CardPower > player2CardPower)
 		handleBattleWon(&gameState -> Player1Data, &gameState -> Player2Data, gameState);
@@ -105,6 +123,7 @@ void InitGame(GameState *gameState, WarOption warOption, GameRules gameRules, in
 	gameState -> CardsPerColor = cardsPerColor;
 	gameState -> GameRules = gameRules;
 	gameState -> PrintResults = FALSE;
+	gameState -> PrintUIData = FALSE;
 	gameState -> RandomSeed = DEFAULT_SEED;
 	gameState -> TurnsCount = 0;
 	gameState -> WarOption = warOption;
@@ -133,6 +152,7 @@ void InitGameFromFile(GameState *gameState, const char *path, WarOption warOptio
 	gameState -> CardsPerColor = cardsCount / COLORS_COUNT;
 	gameState -> GameRules = gameRules;
 	gameState -> PrintResults = FALSE;
+	gameState -> PrintUIData = FALSE;
 	gameState -> RandomSeed = DEFAULT_SEED;
 	gameState -> TurnsCount = 0;
 	gameState -> WarOption = warOption;
@@ -143,18 +163,23 @@ void InitGameFromFile(GameState *gameState, const char *path, WarOption warOptio
 	AssignCardNumbersFromArray(gameState, cardNumbers, cardsCount);
 }
 
-void AppendStacksInWar(GameState *gameState)
+void putHiddenCardsToStack(GameState *gameState)
 {
-	for (int i = 0; i < CARDS_TAKING_PART_IN_WAR; i++)
-	{
-		AddFirstCardToStack(&gameState -> Player1Data);
-		AddFirstCardToStack(&gameState -> Player2Data);
+	AddFirstCardToStack(&gameState -> Player1Data);
+	AddFirstCardToStack(&gameState -> Player2Data);
+	if (gameState -> PrintResults)
+		PrintStandardTurnData(gameState);
+	if (gameState -> PrintUIData)
+		UIPrintMiddleWarTurnInfo(&gameState -> Player1Data.StackCards.FirstCard -> value);
+	gameState -> TurnsCount++;
+}
 
-		gameState -> TurnsCount++;
-
-		if (gameState -> PrintResults && i != CARDS_TAKING_PART_IN_WAR - 1) // prevents from duplicating turn data info for user
-			PrintStandardTurnData(gameState);
-	}
+void appendStacksInWar(GameState *gameState)
+{
+	putHiddenCardsToStack(gameState);
+	AddFirstCardToStack(&gameState -> Player1Data);
+	AddFirstCardToStack(&gameState -> Player2Data);
+	gameState -> TurnsCount++;
 }
 
 int performWarOptionWithoutRefillIfPossible(GameState *gameState)
@@ -162,7 +187,7 @@ int performWarOptionWithoutRefillIfPossible(GameState *gameState)
 	if (!finishGameIfWarNotPossible(gameState))
 		return FALSE;
 
-	AppendStacksInWar(gameState);
+	appendStacksInWar(gameState);
 
 	return TRUE;
 }
@@ -236,7 +261,7 @@ int performWarOptionWithRefillIfPossible(GameState *gameState)
 			return FALSE;
 	}
 	else
-		AppendStacksInWar(gameState);
+		appendStacksInWar(gameState);
 
 	return TRUE;
 }
