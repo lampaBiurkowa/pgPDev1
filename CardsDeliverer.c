@@ -11,24 +11,22 @@ Card generateSingleRandomCard(int cardsPerColors)
 	return card;
 }
 
-int cardAlreadyGiven(Card *cardConsidered, Card cardsGiven[], int cardsGivenCount)
+int arrayContainsCard(Card *cardConsidered, Card array[], int size)
 {
-	for (int i = 0; i < cardsGivenCount; i++)
-		if (cardsGiven[i].Color == cardConsidered -> Color && cardsGiven[i].Number == cardConsidered -> Number)
+	for (int i = 0; i < size; i++)
+		if (array[i].Color == cardConsidered -> Color && array[i].Number == cardConsidered -> Number)
 			return TRUE;
 
 	return FALSE;
 }
 
-void generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[], unsigned int seed)
+void generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[])
 {
-	srand(time(NULL) + seed); //TODO ?
-
 	int cardsGivenCount = 0;
 	while (cardsGivenCount < cardsPerColors * COLORS_COUNT)
 	{
 		Card card = generateSingleRandomCard(cardsPerColors);
-		if (!cardAlreadyGiven(&card, arrayToFill, cardsGivenCount))
+		if (!arrayContainsCard(&card, arrayToFill, cardsGivenCount))
 		{
 			arrayToFill[cardsGivenCount] = card;
 			cardsGivenCount++;
@@ -69,135 +67,116 @@ void assignCardsToPlayers(int cardsPerColors, Card cardsInRandomOrder[], GameSta
 void GiveCards(GameState *gameState)
 {
 	Card *cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
-	generateCardsInRandomOrder(gameState -> CardsPerColor, cards, gameState -> RandomSeed);
+	generateCardsInRandomOrder(gameState -> CardsPerColor, cards);
 	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
 }
 
-int wasDecisionValid(int cardsToGiveCount, Card cardsUsed[], int cardsGivenCount, int rank, int minCardNumberPointing, int currentRank)
+int getSmallerNumberIfPossible(Card *card, int diff, Card array[], int size)
 {
-	int missingRank = rank - currentRank;
+	int target = card -> Number + diff; //diff < 0
+	if (target < MIN_CARD_NUMBER)
+		target = MIN_CARD_NUMBER;
 
-	//printf("MAX: %i < %i\n", GetMaxRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing), missingRank);
-	if (GetMaxRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing) < missingRank)
-		return FALSE;
-	//printf("MIN: %i > %i\n", GetMinRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing), missingRank);
-	if (GetMinRankReachable(cardsToGiveCount, cardsUsed, cardsGivenCount, minCardNumberPointing) > missingRank)
-		return FALSE;
-	if (currentRank > rank)
-		return FALSE;
-
-	return TRUE;
-}
-
-int getMinRank(int minCardPointingNumber, Card cardsUnassigned[], int mask[], int size)
-{
-	int minIndex = -1;
-	int min = MAX_CARD_NUMBER - minCardPointingNumber + 1;
-	for (int i = 0; i < size; i++)
-		if (GetCardRank(cardsUnassigned[i].Number, minCardPointingNumber) < min && mask[i] == FALSE)
-		{
-			min = GetCardRank(cardsUnassigned[i].Number, minCardPointingNumber);
-			minIndex = i;
-		}
-
-	mask[minIndex] = TRUE;
-	return min;
-}
-
-int ujea(int missingRank, int minCardPointingNumber, Card cardsUnassigned[], int size)
-{
-	if (missingRank < 0)
-		return FALSE;
-
-	int totalSum = 0;
-	for (int i = 0; i < size; i++)
-		totalSum += GetCardRank(cardsUnassigned[i].Number, minCardPointingNumber);
-
-	int *mask = (int *)malloc(sizeof(int) * size);
-	for (int i = 0; i < size; i++)
-		mask[i] = FALSE;
-
-	for (int i = 0; i < size; i++)
+	for (int i = target; i < card -> Number; i++)
 	{
-		if (totalSum == missingRank)
-			return TRUE;
-		int z = getMinRank(minCardPointingNumber, cardsUnassigned, mask, size);
-		totalSum -= z;
-		printf("zbijam sume o:%i tera %i ma byc: %i \n", z, totalSum, missingRank);
+		int occurances = 0;
+		for (int j = 0; j < size; j++)
+		{
+			if (array[j].Number == i)
+				occurances++;
+		}
+		if (occurances < COLORS_COUNT)
+			return i;
 	}
-	
-	return FALSE;
+
+	return card -> Number;
 }
 
-void jea(int cardsPerColor, int rank, int minCardNumberPointing, Card arrayToFill[], unsigned int seed)
+CardColor getUnusedColor(int number, Card array[], int size)
 {
-	srand(time(NULL) + seed);
-	Card *cardsUnassigned = (Card *)malloc(sizeof(Card) * cardsPerColor * COLORS_COUNT);
-	for (int i = 0; i < cardsPerColor; i++)
-		for (int j = 0; j < 4; j++)
-		{
-			cardsUnassigned[i * 4 + j].Number = MAX_CARD_NUMBER - cardsPerColor + 1 + i;
-			cardsUnassigned[i * 4 + j].Color = j;
-		}
+	Card card;
+	card.Number = number;
+	for (int i = 0; i < COLORS_COUNT; i++)
+	{
+		card.Color = i;
+		if (!arrayContainsCard(&card, array, size))
+			return i;
+	}
+}
 
-	int cardsGivenCount = 0, currentRank = 0, cardsToGiveCount = (cardsPerColor * COLORS_COUNT) / 2;
-	while (cardsGivenCount < cardsToGiveCount)
+int getBiggerNumberIfPossible(Card *card, int diff, Card array[], int size)
+{
+	int target = card -> Number + diff; //diff < 0
+	if (target > MAX_CARD_NUMBER)
+		target = MAX_CARD_NUMBER;
+
+	for (int i = target; i > card -> Number; i--)
+	{
+		int occurances = 0;
+		for (int j = 0; j < size; j++)
+		{
+			if (array[j].Number == i)
+				occurances++;
+		}
+		if (occurances < COLORS_COUNT)
+			return i;
+	}
+
+	return card -> Number;
+}
+
+Card getBetterCardIfPossible(Card *card, int diff, Card array[], int size)
+{
+	int newNumber;
+	if (diff > 0)
+		newNumber = getBiggerNumberIfPossible(card, diff, array, size);
+	else
+		newNumber = getSmallerNumberIfPossible(card, diff, array, size);
+
+	Card result;
+	if (newNumber == card -> Number)
+	{
+		result.Number = card -> Number;
+		result.Color = card -> Color;
+		return result;
+	}
+
+	result.Number = newNumber;
+	result.Color = getUnusedColor(newNumber, array, size);
+	return result;
+}
+
+void generateCardsForRank(int cardsPerColor, int rank, int minCardNumberPointing, Card arrayToFill[])
+{
+	int cardsCount = cardsPerColor * (COLORS_COUNT / 2);
+	int i = 0;
+	while (i < cardsCount)
 	{
 		Card card = generateSingleRandomCard(cardsPerColor);
-		if (cardAlreadyGiven(&card, arrayToFill, cardsGivenCount))
+		if (arrayContainsCard(&card, arrayToFill, i))
 			continue;
 
-		arrayToFill[cardsGivenCount] = card;
-		cardsGivenCount++;
-		currentRank += GetCardRank(card.Number, minCardNumberPointing);
-		int missingCardsCount = cardsToGiveCount - cardsGivenCount;
-		printf("Wybieram %i %i - ", card.Number, card.Color);
-		if (!ujea(rank - currentRank, minCardNumberPointing, cardsUnassigned, cardsPerColor * COLORS_COUNT))
-		{
-			printf("zla decyzja\n");
-			for (int i = 0; i < cardsGivenCount; i++)
-				printf(" %i", arrayToFill[i].Number);
-			printf("\n");
-			cardsGivenCount--;
-			currentRank -= GetCardRank(card.Number, minCardNumberPointing);
-		}
-		else
-			printf("dobra decyzja\n");
+		arrayToFill[i] = card;
+		i++;
 	}
 
-}
-
-void generateCardsForRank(int cardsPerColors, int rank, int minCardNumberPointing, Card arrayToFill[], unsigned int seed)
-{
-	srand(time(NULL) + seed);
-
-	int cardsGivenCount = 0, currentRank = 0, cardsToGiveCount = (cardsPerColors * COLORS_COUNT) / 2;
-	while (cardsGivenCount < cardsToGiveCount)
+	int currentRank = GetArrayRank(arrayToFill, cardsCount, minCardNumberPointing);
+	while (currentRank != rank)
 	{
-		Card card = generateSingleRandomCard(cardsPerColors);
-		if (cardAlreadyGiven(&card, arrayToFill, cardsGivenCount))
-			continue;
-
-		arrayToFill[cardsGivenCount] = card;
-		cardsGivenCount++;
-		currentRank += GetCardRank(card.Number, minCardNumberPointing);
-		int missingCardsCount = cardsToGiveCount - cardsGivenCount;
-		//printf("nie wyczymie given: %i misisng: %i rank: %i\n", cardsGivenCount, currentRank - rank, rank);
-		if (!wasDecisionValid(missingCardsCount, arrayToFill, cardsGivenCount, rank, minCardNumberPointing, currentRank))
-		{
-			cardsGivenCount--;
-			currentRank -= GetCardRank(card.Number, minCardNumberPointing);
-		}
+		int index = rand() % cardsCount;
+		int diff = rank - currentRank;
+		arrayToFill[index] = getBetterCardIfPossible(&arrayToFill[index], diff, arrayToFill, cardsCount);
+		currentRank = GetArrayRank(arrayToFill, cardsCount, minCardNumberPointing);
 	}
 }
 
-void assignRemainingCards(int cardsPerColors, Card arrayPartlyFilled[])
+void assignRemainingCards(int cardsPerColor, Card arrayPartlyFilled[])
 {
-	int cardsAlreadyGivenCount = (cardsPerColors * COLORS_COUNT) / 2;
-	while (cardsAlreadyGivenCount < cardsPerColors * COLORS_COUNT)
+	int cardsAlreadyGivenCount = (cardsPerColor * COLORS_COUNT) / 2;
+	while (cardsAlreadyGivenCount < cardsPerColor * COLORS_COUNT)
 	{
-		Card card = generateSingleRandomCard(cardsPerColors);
-		if (cardAlreadyGiven(&card, arrayPartlyFilled, cardsAlreadyGivenCount))
+		Card card = generateSingleRandomCard(cardsPerColor);
+		if (arrayContainsCard(&card, arrayPartlyFilled, cardsAlreadyGivenCount))
 			continue;
 
 		arrayPartlyFilled[cardsAlreadyGivenCount] = card;
@@ -216,8 +195,6 @@ int indexAlreadyPlaced(int index, int indexesAlreadyPlaced[], int indexesPlacedC
 
 void generateNewIndexesPlacement(int arrayToFill[], int cardsCount)
 {
-	srand(time(NULL));
-
 	int indexesPlacedCount = 0;
 	while (indexesPlacedCount < cardsCount)
 	{
@@ -257,19 +234,10 @@ void GetCardsForRank(GameState *gameState, int rank, int minCardNumberPointing)
 	else if (rank > GetMaxRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing))
 		rank = GetMaxRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing);
 
-	int x = 0;
-	while (GetPlayerRank(&gameState -> Player1Data, minCardNumberPointing) != rank)
-	{
-		ClearCards(&gameState -> Player1Data.HandCards);
-		ClearCards(&gameState -> Player2Data.HandCards);
-		cards = malloc(sizeof(Card) * DECK_MAX_SIZE);
-		jea(gameState -> CardsPerColor, rank, minCardNumberPointing, cards, gameState -> RandomSeed + x++);
-
-		//printf("?????????????4\n");
-		assignRemainingCards(gameState -> CardsPerColor, cards);
-		assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
-		//printf("a\n %i == %i", GetPlayerRank(&gameState -> Player1Data, minCardNumberPointing), rank);
-	}
+	generateCardsForRank(gameState -> CardsPerColor, rank, minCardNumberPointing, cards);
+	assignRemainingCards(gameState -> CardsPerColor, cards);
+	assignCardsToPlayers(gameState -> CardsPerColor, cards, gameState);
+	
 	ShuffleCards(&gameState -> Player1Data.HandCards);
 	ShuffleCards(&gameState -> Player2Data.HandCards);
 }

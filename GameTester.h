@@ -18,7 +18,6 @@ typedef struct TestData
 	int RankMinCardPointingNumber;
 	Strategy Player1Strategy;
 	Strategy Player2Strategy;
-	int RandomSeed;
 	int Repeat;
 } TestData;
 

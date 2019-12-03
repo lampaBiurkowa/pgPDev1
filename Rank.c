@@ -10,22 +10,45 @@ int GetCardRank(int cardNumber, int minCardNumberPointing)
 	return cardNumber - minCardNumberPointing + 1;
 }
 
-int GetPlayerRank(PlayerData *player, int minCardNumberPointing)
+Card GetRandomCardForRank(int rank, int minCardNumberPointing)
+{
+	Card card;
+	if (rank > 0)
+		card.Number = rank + minCardNumberPointing - 1;
+	else
+		card.Number = (rand() % (minCardNumberPointing - MIN_CARD_NUMBER)) + MIN_CARD_NUMBER;
+	card.Color = rand() % COLORS_COUNT;
+
+	return card;
+}
+
+int GetQueueRank(CardsQueue *queue, int minCardNumberPointing)
 {
 	int output = 0;
-	CardQueueItem *item = player -> HandCards.FirstCard;
+	CardQueueItem *item = queue -> FirstCard;
 	if (item == NULL)
 		return output;
 
 	if (item -> value.Number >= minCardNumberPointing)
 		output += item -> value.Number - minCardNumberPointing + 1;
 
-	for (int i = 1; i < player -> HandCards.CardsCount; i++)
+	for (int i = 1; i < queue -> CardsCount; i++)
 	{
 		item = item -> previous;
 		if (item -> value.Number >= minCardNumberPointing)
 			output += item -> value.Number - minCardNumberPointing + 1;
 	}
+
+	return output;
+}
+
+int GetArrayRank(Card array[], int size, int minCardNumberPointing)
+{
+	int output = 0;
+
+	for (int i = 0; i < size; i++)
+		if (array[i].Number >= minCardNumberPointing)
+			output += array[i].Number - minCardNumberPointing + 1;
 
 	return output;
 }

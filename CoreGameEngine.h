@@ -4,7 +4,6 @@
 #define CARDS_TAKING_PART_IN_WAR (2)
 #define MIN_CARD_NUMBER (2)
 #define MAX_CARD_NUMBER (14)
-#define YOUNGEST_CARD_NUMBER (2)
 
 typedef enum GameRules { STANDARD, SMART } GameRules;
 typedef enum Strategy { DEFENSIVE, EFFICENT, OFFENSIVE, RANDOMLY, USER } Strategy;
@@ -27,7 +26,6 @@ typedef struct GameState
 	PlayerData Player2Data;
 	int PrintResults;
 	int PrintUIData;
-	int RandomSeed;
 	int TurnsCount;
 	WarOption WarOption;
 	PlayerData *Winner;

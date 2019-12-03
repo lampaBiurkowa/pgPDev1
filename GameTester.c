@@ -4,7 +4,6 @@
 
 void InitTestData(TestData *testData, int repeat)
 {
-	testData -> RandomSeed = 0;
 	testData -> Repeat = repeat;
 	testData -> Player1Rank = 0;
 	testData -> RankMinCardPointingNumber = MIN_CARD_NUMBER;
@@ -22,7 +21,7 @@ void InitStatsHandler(StatsHandler *handler)
 
 void playStandardGame(GameState *gameState)
 {
-	const int GAME_LOOPED_INDICATOR = 10000;
+	const int GAME_LOOPED_INDICATOR = 5000;
 
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
@@ -104,13 +103,7 @@ void assignCardsIfNotPreassigned(GameState *gameState, int player1Rank, int minC
 	int rankNotToSmall = player1Rank >= GetMinRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing);
 	int rankNotToBig = player1Rank <= GetMaxRankForDeckSize(gameState -> CardsPerColor, minCardNumberPointing);
 	if (rankNotToSmall && rankNotToBig)
-	{
 		GetCardsForRank(gameState, player1Rank, minCardNumberPointing);
-		/*printf("dsafdsaf %i %i ",player1Rank, GetPlayerRank(&gameState -> Player1Data, minCardNumberPointing));
-		printf("dsafdsaf %i\n", GetPlayerRank(&gameState -> Player2Data, minCardNumberPointing));
-		PrintCardsQueue(&gameState -> Player1Data.HandCards);
-		PrintCardsQueue(&gameState -> Player2Data.HandCards);*/
-	}
 	else
 		GiveCards(gameState);
 }
@@ -121,7 +114,7 @@ StatsHandler RunTest(TestData *testData)
 	InitStatsHandler(&statsHandler);
 	for (int i = 0; i < testData -> Repeat; i++)
 	{
-		testData -> GameState.RandomSeed = i + testData -> RandomSeed;
+		UpdateSrand();
 		assignCardsIfNotPreassigned(&testData -> GameState, testData -> Player1Rank, testData -> RankMinCardPointingNumber);
 		if (testData -> GameState.GameRules == STANDARD)
 			playStandardGame(&testData -> GameState);

@@ -1,5 +1,13 @@
 #include "Structures.h"
 
+void UpdateSrand()
+{
+	static int seed;
+	srand(time(NULL) + seed++);
+	if (seed > 10000)
+		seed = 0;
+}
+
 void InitCardsQueue(CardsQueue *queue)
 {
 	for (int i = 0; i < DECK_MAX_SIZE; i++)

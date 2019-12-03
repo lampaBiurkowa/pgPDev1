@@ -28,41 +28,38 @@ int main()
 {
 	int choice;
 	printMenu();
-	while (1)
+	while (scanf_s("%i", &choice))
 	{
-		while (scanf_s("%i", &choice))
+		switch (choice)
 		{
-			switch (choice)
-			{
-			case 1:
-				StandardGameProblem1();
-				break;
-			case 2:
-				StandardGameProblem2();
-				break;
-			case 3:
-				Demonstrate();
-				break;
-			case 4:
-				SmartGameProblem1();
-				break;
-			case 5:
-				SmartGameProblem2();
-				break;
-			case 6:
-				PlayWithComputer();
-				break;
-			case 7:
-				EfficentStrategy();
-				break;
-			case 8:
-				PlayFromFile();
-				break;
-			default:
-				printf("Prosze wpisac poprawna cyfre");
-			}
-			printMenu();
+		case 1:
+			StandardGameProblem1();
+			break;
+		case 2:
+			StandardGameProblem2();
+			break;
+		case 3:
+			Demonstrate();
+			break;
+		case 4:
+			SmartGameProblem1();
+			break;
+		case 5:
+			SmartGameProblem2();
+			break;
+		case 6:
+			PlayWithComputer();
+			break;
+		case 7:
+			EfficentStrategy();
+			break;
+		case 8:
+			PlayFromFile();
+			break;
+		default:
+			printf("Prosze wpisac poprawna cyfre");
 		}
+		printMenu();
 	}
 
 	return 0;

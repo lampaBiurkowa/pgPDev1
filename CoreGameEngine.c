@@ -118,13 +118,10 @@ void initPlayer(PlayerData *playerData)
 
 void InitGame(GameState *gameState, WarOption warOption, GameRules gameRules, int cardsPerColor)
 {
-	const int DEFAULT_SEED = 0;
-
 	gameState -> CardsPerColor = cardsPerColor;
 	gameState -> GameRules = gameRules;
 	gameState -> PrintResults = FALSE;
 	gameState -> PrintUIData = FALSE;
-	gameState -> RandomSeed = DEFAULT_SEED;
 	gameState -> TurnsCount = 0;
 	gameState -> WarOption = warOption;
 	gameState -> Winner = NULL;
@@ -144,8 +141,6 @@ void ResetGame(GameState *gameState)
 
 void InitGameFromFile(GameState *gameState, const char *path, WarOption warOption, GameRules gameRules)
 {
-	const int DEFAULT_SEED = 0;
-
 	int *cardNumbers = (int *)malloc(DECK_MAX_SIZE * sizeof(int));
 	int cardsCount = GetCardNumbersFromFile(path, cardNumbers);
 
@@ -153,7 +148,6 @@ void InitGameFromFile(GameState *gameState, const char *path, WarOption warOptio
 	gameState -> GameRules = gameRules;
 	gameState -> PrintResults = FALSE;
 	gameState -> PrintUIData = FALSE;
-	gameState -> RandomSeed = DEFAULT_SEED;
 	gameState -> TurnsCount = 0;
 	gameState -> WarOption = warOption;
 	gameState -> Winner = NULL;

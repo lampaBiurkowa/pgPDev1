@@ -47,7 +47,7 @@ void printPostBattleData(Card *userCard, Card *opponentCard)
 {
 	const char* VICTORY_TEXTS[] = { "JEA!", "Zbierasz karty!", "Tak trzymac!", "Widac ze profesjonalista!" };
 	const char* LOSE_TEXTS[] = { ":'(", "Nic sie nie stalo!", "Niestety tracisz karty...", "Nie poddawaj sie!" };
-	int textIndex = rand() % 4; //srand not required there
+	int textIndex = rand() % 4;
 	if (userCard -> Number > opponentCard -> Number)
 		printf("\n*** WYGRYWASZ POJEDYNEK *** %s\n\n", VICTORY_TEXTS[textIndex]);
 	else if (userCard -> Number < opponentCard -> Number)

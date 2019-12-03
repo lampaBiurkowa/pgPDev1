@@ -3,12 +3,8 @@
 
 void smartSelectRandomly(CardsQueue *ownHandCards)
 {
-	static int seed;
-	srand(time(NULL) + seed);
 	if (rand() % CARDS_TO_CHOOSE_FROM_COUNT == 0)
 		SwapFrontTwoCards(ownHandCards);
-
-	seed = (seed + 1) % 10000;
 }
 
 void smartSelectDefensively(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
@@ -20,7 +16,9 @@ void smartSelectDefensively(CardsQueue *ownHandCards, CardsQueue *opponentStackC
 		return; //nie robic swapa powodujacego wojne
 	if (opponentCard.Number == firstCard.Number)
 		SwapFrontTwoCards(ownHandCards);
-	if (firstCard.Number > opponentCard.Number && secondCard.Number > opponentCard.Number && firstCard.Number > secondCard.Number)
+	else if (firstCard.Number > opponentCard.Number && secondCard.Number > opponentCard.Number && firstCard.Number > secondCard.Number)
+		SwapFrontTwoCards(ownHandCards);
+	else if (firstCard.Number > opponentCard.Number && secondCard.Number < opponentCard.Number)
 		SwapFrontTwoCards(ownHandCards);
 }
 

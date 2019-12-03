@@ -2,13 +2,12 @@
 #include "CardsDeliverer.h"
 #include "InputHandler.h"
 
-void WriteInputData(const char *path, int cardsPerColor, int seed)
+void WriteInputData(const char *path, int cardsPerColor)
 {
 	FILE *file;
 	fopen_s(&file, path, "w");
 	GameState gameState;
 	InitGame(&gameState, WITHOUT_REFILL, STANDARD, cardsPerColor);
-	gameState.RandomSeed = seed;
 	GiveCards(&gameState);
 	CardQueueItem *item = gameState.Player1Data.HandCards.FirstCard;
 	for (int i = 0; i < gameState.Player1Data.HandCards.CardsCount; i++)
