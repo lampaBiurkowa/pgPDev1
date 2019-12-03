@@ -1,7 +1,7 @@
 #include "SmartGameEngine.h"
 #include "conio.h"
 
-Card smartSelectRandomly(CardsQueue *ownHandCards)
+void smartSelectRandomly(CardsQueue *ownHandCards)
 {
 	static int seed;
 	srand(time(NULL) + seed);
@@ -11,21 +11,31 @@ Card smartSelectRandomly(CardsQueue *ownHandCards)
 	seed = (seed + 1) % 10000;
 }
 
-Card smartSelectDefensively(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
+void smartSelectDefensively(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
 {
-	CardQueueItem *firstCardItem = ownHandCards -> FirstCard;
-	Card firstCard = firstCardItem -> value;
-	Card secondCard = firstCardItem -> previous -> value;
-	if (opponentStackCards -> FirstCard -> value.Number == firstCard.Number || secondCard.Number < firstCard.Number)
+	Card firstCard = ownHandCards -> FirstCard -> value;
+	Card secondCard = ownHandCards -> FirstCard -> previous -> value;
+	Card opponentCard = opponentStackCards -> FirstCard -> value;
+	if (opponentCard.Number == secondCard.Number)
+		return; //nie robic swapa powodujacego wojne
+	if (opponentCard.Number == firstCard.Number)
+		SwapFrontTwoCards(ownHandCards);
+	if (firstCard.Number > opponentCard.Number && secondCard.Number > opponentCard.Number && firstCard.Number > secondCard.Number)
 		SwapFrontTwoCards(ownHandCards);
 }
 
-Card smartSelectOffensively(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
+void smartSelectOffensively(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
 {
-	CardQueueItem *firstCardItem = ownHandCards -> FirstCard;
-	Card firstCard = firstCardItem -> value;
-	Card secondCard = firstCardItem -> previous -> value;
-	if (opponentStackCards -> FirstCard -> value.Number == secondCard.Number || secondCard.Number > firstCard.Number)
+	Card firstCard = ownHandCards -> FirstCard -> value;
+	Card secondCard = ownHandCards -> FirstCard -> previous -> value;
+	Card opponentCard = opponentStackCards -> FirstCard -> value;
+	if (opponentCard.Number == firstCard.Number)
+		return;
+	if (opponentCard.Number == secondCard.Number)
+		SwapFrontTwoCards(ownHandCards);
+	if (firstCard.Number > opponentCard.Number && secondCard.Number < opponentCard.Number)
+		return; //wykonac przebicie
+	if (firstCard.Number > secondCard.Number)
 		SwapFrontTwoCards(ownHandCards);
 }
 
@@ -86,15 +96,9 @@ int makeSwapInEfficentStrategy(CardsQueue *ownHandCards, CardsQueue *opponentSta
 	return FALSE;
 }
 
-Card smartSelectEfficently(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
+void smartSelectEfficently(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
 {
-	CardQueueItem *firstCardItem = ownHandCards -> FirstCard;
-	Card firstCard = firstCardItem -> value;
-	Card secondCard = firstCardItem -> previous -> value;
-	Card thirdCard = firstCardItem -> previous -> previous -> value;
-	Card opponentCard = opponentStackCards -> FirstCard -> value;
-
-	if (1)//makeSwapInEfficentStrategy())
+	if (makeSwapInEfficentStrategy(ownHandCards, opponentStackCards))
 		SwapFrontTwoCards(ownHandCards);
 }
 
@@ -117,7 +121,7 @@ Card smartSelectByUser(CardsQueue *ownHandCards, CardsQueue *opponentStackCards)
 
 void chooseCardWithStrategy(PlayerData *startingPlayer, PlayerData *selectingPlayer)
 {
-	if (selectingPlayer -> Strategy == DEFENSIVE) //TODO SWITCH ?
+	if (selectingPlayer -> Strategy == DEFENSIVE)
 		smartSelectDefensively(&selectingPlayer -> HandCards, &startingPlayer -> StackCards);
 	else if (selectingPlayer -> Strategy == OFFENSIVE)
 		smartSelectOffensively(&selectingPlayer -> HandCards, &startingPlayer -> StackCards);

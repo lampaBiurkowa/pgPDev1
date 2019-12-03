@@ -49,21 +49,22 @@ void SmartGameProblem1()
 
 void SmartGameProblem2()
 {
-	int rank = GetMaxRankForDeckSize(13 * COLORS_COUNT, 3) / 2;
+	//int rank = GetMaxRankForDeckSize(13 * COLORS_COUNT, 3) / 2;
+	int rank = 0;
 	printf("\nLosowa vs Losowa\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, RANDOMLY, rank, 3, SIM_SEED_DEFAULT);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, RANDOMLY, rank, SIM_MIN_CARD_NUM_POINTING, SIM_SEED_DEFAULT);
 
 	printf("\nLosowa vs Wsciekla\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, OFFENSIVE, rank, 3, SIM_SEED_DEFAULT);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, OFFENSIVE, rank, SIM_MIN_CARD_NUM_POINTING, SIM_SEED_DEFAULT);
 
 	printf("\nLosowa vs Pokojowa\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, DEFENSIVE, rank, 3, SIM_SEED_DEFAULT);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, DEFENSIVE, rank, SIM_MIN_CARD_NUM_POINTING, SIM_SEED_DEFAULT);
 
 	printf("\nWsciekla vs Wsciekla\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, OFFENSIVE, OFFENSIVE, rank, 3, SIM_SEED_DEFAULT);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, OFFENSIVE, OFFENSIVE, rank, SIM_MIN_CARD_NUM_POINTING, SIM_SEED_DEFAULT);
 
 	printf("\nWsciekla vs Pokojowa\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, OFFENSIVE, DEFENSIVE, rank, 3, SIM_SEED_DEFAULT);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, OFFENSIVE, DEFENSIVE, rank, SIM_MIN_CARD_NUM_POINTING, SIM_SEED_DEFAULT);
 
 	printf("\nPokojowa vs Pokojowa\n");
 	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, DEFENSIVE, DEFENSIVE, rank, 3, SIM_SEED_DEFAULT);

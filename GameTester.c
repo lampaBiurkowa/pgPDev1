@@ -22,9 +22,15 @@ void InitStatsHandler(StatsHandler *handler)
 
 void playStandardGame(GameState *gameState)
 {
+	const int GAME_LOOPED_INDICATOR = 10000;
+
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
 		Battle(gameState);
+
+		if (gameState -> TurnsCount > GAME_LOOPED_INDICATOR) //zapobiega loopowaniu sie gry na malych taliach
+			break;
+
 		if (gameState -> Winner == &gameState -> Player1Data)
 			break;
 		else if (gameState -> Winner == &gameState -> Player2Data)
@@ -34,7 +40,7 @@ void playStandardGame(GameState *gameState)
 
 void playSmartGame(GameState *gameState)
 {
-	int startingPlayerIndex = rand(time(NULL)) % 2;
+	int startingPlayerIndex = rand() % 2;
 	PlayerData *startingPlayer;
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
@@ -126,6 +132,8 @@ StatsHandler RunTest(TestData *testData)
 			statsHandler.Player1VictoriesCount++;
 		else if (testData -> GameState.Winner == &testData -> GameState.Player2Data)
 			statsHandler.Player2VictoriesCount++;
+		else
+			i--;
 
 		if (testData -> GameState.PrintResults)
 			PrintVictoryInfo(&testData -> GameState);

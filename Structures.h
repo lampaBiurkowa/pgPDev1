@@ -8,6 +8,8 @@
 #define TRUE (1)
 
 #include <stdio.h> //TODO remove
+#include <stdlib.h>
+#include <time.h>
 
 typedef enum { PIK, KARO, TREFL, KIER } CardColor;
 
@@ -39,6 +41,8 @@ const char *GetCardSuitName(CardColor color);
 int GetCardNumberOccurrencesInQueue(CardsQueue *queue, int numberConsidered);
 void InitCardsQueue(CardsQueue *queue);
 void MoveQueueToQueue(CardsQueue *destination, CardsQueue *source);
+void MoveQueueToQueueFront(CardsQueue *destination, CardsQueue *source);
+Card PopBackCard(CardsQueue *queue);
 Card PopFrontCard(CardsQueue *queue);
 void PushFrontCard(CardsQueue *queue, Card value);
 void PushBackCard(CardsQueue *queue, Card value);

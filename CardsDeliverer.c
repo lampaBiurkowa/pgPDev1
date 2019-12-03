@@ -3,8 +3,8 @@
 
 Card generateSingleRandomCard(int cardsPerColors)
 {
-	int colorId = rand() % COLORS_COUNT; //TODO rand() dziala?
-	int cardNumber = rand() % cardsPerColors + YOUNGEST_CARD_NUMBER;
+	int colorId = rand() % COLORS_COUNT;
+	int cardNumber = rand() % cardsPerColors + MAX_CARD_NUMBER - cardsPerColors + 1;
 	Card card;
 	card.Color = colorId;
 	card.Number = cardNumber;
@@ -22,7 +22,7 @@ int cardAlreadyGiven(Card *cardConsidered, Card cardsGiven[], int cardsGivenCoun
 
 void generateCardsInRandomOrder(int cardsPerColors, Card arrayToFill[], unsigned int seed)
 {
-	srand(time(NULL) + seed * 7); //TODO ?
+	srand(time(NULL) + seed); //TODO ?
 
 	int cardsGivenCount = 0;
 	while (cardsGivenCount < cardsPerColors * COLORS_COUNT)

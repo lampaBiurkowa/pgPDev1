@@ -171,15 +171,15 @@ void putHiddenCardsToStack(GameState *gameState)
 		PrintStandardTurnData(gameState);
 	if (gameState -> PrintUIData)
 		UIPrintMiddleWarTurnInfo(&gameState -> Player1Data.StackCards.FirstCard -> value);
-	gameState -> TurnsCount++;
 }
 
 void appendStacksInWar(GameState *gameState)
 {
+	gameState -> TurnsCount++;
 	putHiddenCardsToStack(gameState);
+	gameState -> TurnsCount++;
 	AddFirstCardToStack(&gameState -> Player1Data);
 	AddFirstCardToStack(&gameState -> Player2Data);
-	gameState -> TurnsCount++;
 }
 
 int performWarOptionWithoutRefillIfPossible(GameState *gameState)

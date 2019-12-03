@@ -24,6 +24,19 @@ CardQueueItem *allocateCardQueueItem(CardsQueue *queue, CardQueueItem item)
 	return NULL;
 }
 
+Card PopBackCard(CardsQueue *queue)
+{
+	Card value = queue -> LastCard -> value;
+	queue -> LastCard = queue -> LastCard -> next;
+
+	if (queue -> CardsCount == 0)
+		queue -> FirstCard = NULL;
+
+	queue -> QueueItemsAllocations[value.Id] = 0;
+	queue -> CardsCount--;
+	return value;
+}
+
 Card PopFrontCard(CardsQueue *queue)
 {
 	Card value = queue -> FirstCard -> value;
@@ -94,7 +107,7 @@ void MoveQueueToQueue(CardsQueue *destination, CardsQueue *source)
 {
 	int cardsToTakeAmount = source -> CardsCount;
 	for (int i = 0; i < cardsToTakeAmount; i++)
-		PushBackCard(destination, PopFrontCard(source));
+		PushBackCard(destination, PopBackCard(source));
 }
 
 const char *GetCardSuitName(CardColor color)
