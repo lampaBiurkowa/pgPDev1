@@ -35,7 +35,7 @@ void UIPrintGameEntryText()
 
 void printWarInfo()
 {
-	printf("\n * * * * * W  O  J  N  A * * * * *\n");
+	printf("\n * * * * * W  O  J  N  A * * * * *\n\n");
 }
 
 void printTurnData(Card *userCard, Card *opponentCard)

@@ -2,7 +2,6 @@
 #include "CoreGameEngine.h"
 #include "GameDemonstrationDataPrinter.h"
 #include "UserInterfaceDataPrinter.h"
-#include "InputHandler.h"
 
 void getShuffledStackCards(CardsQueue *allStackCards, PlayerData *player1, PlayerData *player2)
 {
@@ -137,24 +136,6 @@ void ResetGame(GameState *gameState)
 
 	initPlayer(&gameState -> Player1Data);
 	initPlayer(&gameState -> Player2Data);
-}
-
-void InitGameFromFile(GameState *gameState, const char *path, WarOption warOption, GameRules gameRules)
-{
-	int *cardNumbers = (int *)malloc(DECK_MAX_SIZE * sizeof(int));
-	int cardsCount = GetCardNumbersFromFile(path, cardNumbers);
-
-	gameState -> CardsPerColor = cardsCount / COLORS_COUNT;
-	gameState -> GameRules = gameRules;
-	gameState -> PrintResults = FALSE;
-	gameState -> PrintUIData = FALSE;
-	gameState -> TurnsCount = 0;
-	gameState -> WarOption = warOption;
-	gameState -> Winner = NULL;
-
-	initPlayer(&gameState -> Player1Data);
-	initPlayer(&gameState -> Player2Data);
-	AssignCardNumbersFromArray(gameState, cardNumbers, cardsCount);
 }
 
 void putHiddenCardsToStack(GameState *gameState)

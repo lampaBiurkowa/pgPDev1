@@ -2,7 +2,6 @@
 #include "SmartGameEngine.h"
 #include "UserInterface.h"
 #include "UserInterfaceDataPrinter.h"
-#include <time.h>
 
 void startGame(int startingCardNumber)
 {

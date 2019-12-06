@@ -1,4 +1,5 @@
 #pragma once
+
 #include "SmartGameEngine.h"
 
 void UIPrintChoiceData(CardQueueItem *usersCard, int startingPlayerIndex);

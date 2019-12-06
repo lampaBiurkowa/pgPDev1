@@ -1,5 +1,4 @@
 #include "StandardGameEngine.h"
-#include <time.h>
 
 void Battle(GameState *gameState)
 {

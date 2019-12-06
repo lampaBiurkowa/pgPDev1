@@ -1,4 +1,5 @@
 #pragma once
+
 #include "StandardGameEngine.h"
 
 void AssignCardNumbersFromArray(GameState *gameState, int *cardNumbers, int cardsCount);

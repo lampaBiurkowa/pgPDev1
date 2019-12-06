@@ -9,6 +9,8 @@ void simulateGame(WarOption warOption, GameRules gameRules, int cardsPerColor, i
 	testData.Player1Rank = player1Rank;
 	testData.RankMinCardPointingNumber = minCardNumberPointing;
 	InitGame(&testData.GameState, warOption, gameRules, cardsPerColor);
+	testData.GameState.Player1Data.Strategy = player1Strategy;
+	testData.GameState.Player2Data.Strategy = player2Strategy;
 	StatsHandler statsHandler = RunTest(&testData);
 	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", testData.GameState.CardsPerColor, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
 }
@@ -48,25 +50,23 @@ void SmartGameProblem1()
 
 void SmartGameProblem2()
 {
-	//int rank = GetMaxRankForDeckSize(13 * COLORS_COUNT, 2) / 2;
-	int rank = 0;
 	printf("\nLosowa vs Losowa\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, RANDOMLY, rank, SIM_MIN_CARD_NUM_POINTING);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, RANDOMLY, SIM_RANK_DEFAULT, SIM_MIN_CARD_NUM_POINTING);
 
 	printf("\nLosowa vs Wsciekla\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, OFFENSIVE, rank, SIM_MIN_CARD_NUM_POINTING);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, OFFENSIVE, SIM_RANK_DEFAULT, SIM_MIN_CARD_NUM_POINTING);
 
 	printf("\nLosowa vs Pokojowa\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, DEFENSIVE, rank, SIM_MIN_CARD_NUM_POINTING);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, DEFENSIVE, SIM_RANK_DEFAULT, SIM_MIN_CARD_NUM_POINTING);
 
 	printf("\nWsciekla vs Wsciekla\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, OFFENSIVE, OFFENSIVE, rank, SIM_MIN_CARD_NUM_POINTING);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, OFFENSIVE, OFFENSIVE, SIM_RANK_DEFAULT, SIM_MIN_CARD_NUM_POINTING);
 
 	printf("\nWsciekla vs Pokojowa\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, OFFENSIVE, DEFENSIVE, rank, SIM_MIN_CARD_NUM_POINTING);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, OFFENSIVE, DEFENSIVE, SIM_RANK_DEFAULT, SIM_MIN_CARD_NUM_POINTING);
 
 	printf("\nPokojowa vs Pokojowa\n");
-	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, DEFENSIVE, DEFENSIVE, rank, 3);
+	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, DEFENSIVE, DEFENSIVE, SIM_RANK_DEFAULT, SIM_MIN_CARD_NUM_POINTING);
 }
 
 void EfficentStrategy()
@@ -79,27 +79,4 @@ void EfficentStrategy()
 
 	printf("\Losowa vs Efektywna\n");
 	simulateGame(WITHOUT_REFILL, SMART, 13, 1000, RANDOMLY, EFFICENT, SIM_RANK_DEFAULT, SIM_MIN_CARD_NUM_POINTING);
-}
-
-void simulateGameFromFile(const char *fileName, WarOption warOption, GameRules gameRules, int cardsPerColor, int repeat, Strategy player1Strategy, Strategy player2Strategy)
-{
-	TestData testData;
-	testData.Repeat = repeat;
-	testData.Player1Strategy = player1Strategy;
-	testData.Player2Strategy = player2Strategy;
-	InitGameFromFile(&testData.GameState, fileName, warOption, gameRules);
-	StatsHandler statsHandler = RunTest(&testData);
-	printf("Talia %i kart player1: %i player2: %i avg turns: %f\n", testData.GameState.CardsPerColor, statsHandler.Player1VictoriesCount, statsHandler.Player2VictoriesCount, statsHandler.TurnsTotal / (float)statsHandler.GamesPlayedCount);
-}
-
-void PlayFromFile()
-{
-	char path[16] = "syf/hownoXX.txt";
-	printf("\nZ PLIKU\n");
-	for (int i = 0; i < 100; i++)
-	{
-		path[9] = ((int)'0' + i / 10);
-		path[10] = ((int)'0' + i % 10);
-		simulateGameFromFile(path, WITHOUT_REFILL, STANDARD, 13, 1, SIM_STRATEGY_DEFAULT, SIM_STRATEGY_DEFAULT, SIM_MIN_CARD_NUM_POINTING);
-	}
 }

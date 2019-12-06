@@ -1,5 +1,5 @@
-#include "GameTester.h"
 #include "CardsDeliverer.h"
+#include "GameTester.h"
 #include "Rank.h"
 
 void InitTestData(TestData *testData, int repeat)
@@ -21,7 +21,7 @@ void InitStatsHandler(StatsHandler *handler)
 
 void playStandardGame(GameState *gameState)
 {
-	const int GAME_LOOPED_INDICATOR = 5000;
+	const int GAME_LOOPED_INDICATOR = 10000;
 
 	while (gameState -> Player1Data.HandCards.CardsCount != DECK_MAX_SIZE && gameState -> Player2Data.HandCards.CardsCount != DECK_MAX_SIZE)
 	{
